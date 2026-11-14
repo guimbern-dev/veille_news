@@ -101,7 +101,7 @@ d'une rubrique retirée ne sont plus affichés, mais restent dans `data/`.
 Après un changement, lancer `scripts/check_feeds.py` pour confirmer que les flux répondent.
 
 Autres réglages : `general.fenetre_heures` (âge maximal des nouvelles, 36 h),
-`general.plafond_resumes` (articles résumés par rubrique et par jour, 40),
+`general.plafond_resumes` (articles résumés par rubrique à chaque exécution, répartis entre les sources ; 80),
 `modeles` (modèles Claude utilisés) et `marches` (symboles du bandeau).
 
 ## Déploiement sur GitHub Pages
@@ -130,7 +130,7 @@ Le site est public, mais il demande aux moteurs de recherche de ne pas l'indexer
 |---|---|
 | GitHub Actions et Pages (dépôt public) | 0 $ |
 | API de marché (Valet, FRED, Twelve Data) | 0 $ |
-| API Claude : Haiku 5.5 pour les articles, Sonnet 5.5 pour le résumé du jour | environ 1 à 2 $ US |
+| API Claude : Haiku 5.5 pour les articles, Sonnet 5.5 pour le résumé du jour | environ 2 à 3 $ US |
 
 Le coût de Claude dépend du volume. Le plafond `plafond_resumes` le borne ; le nombre de
 jetons consommés est écrit dans le journal de chaque exécution.

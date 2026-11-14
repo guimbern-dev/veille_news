@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import logging
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from datetime import datetime, timezone
@@ -105,7 +106,11 @@ def _ask(client, model: str, system: str, user: str, schema: dict, effort: str,
     return json.loads(text)
 
 
-def _summarize_one(article: Article, client, model: str, usage: dict | None) -> Article:
+def _summarize_one(article: Article, client, model: str, usage: dict | None,
+                   deadline: float | None = None) -> Article:
+    if deadline is not None and time.monotonic() >= deadline:
+        # Budget de temps épuisé (API lente) : on n'appelle plus, l'extrait sera affiché.
+        return replace(article, summary=None, importance=2)
     user = f"Source : {article.source}\nTitre : {article.title}\nExtrait : {article.excerpt or '(aucun extrait)'}"
     try:
         data = _ask(client, model, ARTICLE_SYSTEM, user, ARTICLE_SCHEMA,
@@ -117,17 +122,22 @@ def _summarize_one(article: Article, client, model: str, usage: dict | None) -> 
         return replace(article, summary=summary, importance=importance)
     except Exception as exc:
         # L'article reste affiché avec son extrait, marqué comme tel.
-        log.warning("Résumé impossible pour « %s » (%s)", article.title[:60], type(exc).__name__)
+        # Le message est journalisé : c'est lui qui révèle une clé invalide ou un crédit épuisé.
+        log.warning("Résumé impossible pour « %s » (%s : %s)", article.title[:60],
+                    type(exc).__name__, str(exc)[:200])
         return replace(article, summary=None, importance=2)
 
 
 def summarize_articles(articles: list[Article], client, model: str, cap_per_section: int,
-                       usage: dict | None = None) -> list[Article]:
+                       usage: dict | None = None, budget_seconds: float | None = None) -> list[Article]:
     """Résume les articles qui ne le sont pas encore ; conserve l'ordre d'entrée.
 
-    Au plus `cap_per_section` articles sont envoyés par rubrique (les plus récents
-    d'abord) ; les autres gardent leur extrait, avec l'importance minimale.
+    Au plus `cap_per_section` articles sont envoyés par rubrique. Le plafond est réparti
+    entre les sources, tour à tour (dans chaque source, les plus récents d'abord), pour
+    qu'une source très active la nuit ne prive pas de résumé les nouvelles de la journée.
+    Les articles au-delà du plafond gardent leur extrait, avec l'importance minimale.
     `usage`, s'il est fourni, cumule les jetons consommés.
+    `budget_seconds` borne la durée totale : passé ce délai, plus aucun appel n'est fait.
     """
     oldest = datetime.min.replace(tzinfo=timezone.utc)
     pending: dict[str, list[Article]] = {}
@@ -138,12 +148,24 @@ def summarize_articles(articles: list[Article], client, model: str, cap_per_sect
     to_send: list[Article] = []
     skipped: set[str] = set()
     for group in pending.values():
-        group.sort(key=lambda a: a.published or oldest, reverse=True)
-        to_send.extend(group[:cap_per_section])
-        skipped.update(a.id for a in group[cap_per_section:])
+        by_source: dict[str, list[Article]] = {}
+        for article in group:
+            by_source.setdefault(article.source, []).append(article)
+        queues = [sorted(q, key=lambda a: a.published or oldest, reverse=True) for q in by_source.values()]
+        chosen: list[Article] = []
+        turn = 0
+        while len(chosen) < cap_per_section and any(len(q) > turn for q in queues):
+            for queue in queues:  # un article par source à chaque tour
+                if len(queue) > turn and len(chosen) < cap_per_section:
+                    chosen.append(queue[turn])
+            turn += 1
+        chosen_ids = {a.id for a in chosen}
+        to_send.extend(chosen)
+        skipped.update(a.id for a in group if a.id not in chosen_ids)
 
+    deadline = None if budget_seconds is None else time.monotonic() + budget_seconds
     with ThreadPoolExecutor(max_workers=MAX_PARALLEL) as pool:
-        done = pool.map(lambda a: _summarize_one(a, client, model, usage), to_send)
+        done = pool.map(lambda a: _summarize_one(a, client, model, usage, deadline), to_send)
         results = {a.id: a for a in done}
 
     out = []
@@ -188,5 +210,5 @@ def daily_digest(articles: list[Article], sections: tuple[Section, ...], client,
             raise ValueError(f"seulement {len(points)} point(s) valide(s)")
         return points[:7]
     except Exception as exc:
-        log.warning("Résumé du jour indisponible (%s)", type(exc).__name__)
+        log.warning("Résumé du jour indisponible (%s : %s)", type(exc).__name__, str(exc)[:200])
         return None

@@ -169,3 +169,29 @@ def test_digest_without_enough_articles_does_not_call_the_api():
     client = FakeClient({})
     assert daily_digest([art("a1", summary="R.", importance=5)], SECTIONS, client, "m") is None
     assert client.calls == []
+
+
+# --- Corrections issues de la revue finale ---
+
+def test_cap_is_shared_between_sources_not_taken_by_the_latest_publisher():
+    """C1 : une source bavarde la nuit ne doit pas priver de résumé les sources publiées le jour."""
+    night = [art(f"nuit{i}", hours_ago=1 + i, source="Fil de nuit") for i in range(5)]
+    day = [art("banque", hours_ago=20, source="Banque du Canada"), art("stat", hours_ago=21, source="Statistique Canada")]
+    client = FakeClient({}, default=ok("R.", 3))
+    out = {a.id: a for a in summarize_articles(night + day, client, "m", cap_per_section=4)}
+    assert out["banque"].summary == "R." and out["stat"].summary == "R."
+    assert sum(1 for a in out.values() if a.summary) == 4
+    assert out["nuit0"].summary == "R." and out["nuit4"].summary is None    # dans une source, les plus récents d'abord
+
+
+def test_time_budget_stops_calling_the_api():
+    """I3 : passé le budget de temps, les articles restants gardent leur extrait."""
+    client = FakeClient({}, default=ok("R.", 3))
+    out = summarize_articles([art("a1"), art("a2")], client, "m", 40, budget_seconds=0)
+    assert client.calls == [] and all((a.summary, a.importance) == (None, 2) for a in out)
+
+
+def test_failure_log_carries_the_error_message(caplog):
+    """I4 : une panne permanente (clé invalide, crédit épuisé) doit être lisible dans le journal."""
+    summarize_articles([art("a1")], FakeClient({}, default=RuntimeError("crédit épuisé")), "m", 40)
+    assert "crédit épuisé" in caplog.text

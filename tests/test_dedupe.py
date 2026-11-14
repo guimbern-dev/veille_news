@@ -100,3 +100,27 @@ def test_input_articles_are_not_modified():
     a, b = art("A", STORY), art("B", STORY)
     dedupe([a, b], seen=[], recent=[], source_order=["A", "B"])
     assert a.also_covered_by == []
+
+
+# --- Corrections issues de la revue finale (I1) ---
+
+@pytest.mark.parametrize("a,b", [
+    ("Amazon EC2 M8g instances now available in additional regions", "Amazon EC2 C8g instances now available in additional regions"),
+    ("OpenAI lance un nouveau modèle de langage pour les entreprises", "Google lance un nouveau modèle de langage pour les entreprises"),
+    ("Le Canadien bat les Bruins 4-2 au Centre Bell", "Le Canadien bat les Sénateurs 4-2 au Centre Bell"),
+    ("Produit intérieur brut par industrie, septembre 2026", "Produit intérieur brut par industrie, août 2026"),
+    ("Résultats du troisième trimestre - Banque Nationale", "Résultats du troisième trimestre - Banque Royale"),
+])
+def test_titles_differing_by_one_substituted_word_are_different_stories(a, b):
+    assert not titles_match(a, b)
+
+
+def test_title_with_words_only_added_still_matches():
+    assert titles_match("Hydro-Québec réduit ses exportations pour garder l'eau dans ses réservoirs",
+                        "Hydro-Québec réduit ses exportations pour garder l'eau dans ses réservoirs - Le Devoir")
+
+
+def test_same_source_same_day_is_never_merged_by_title():
+    a = art("AWS", "Lancement du service dans une nouvelle région canadienne aujourd'hui", "https://aws.test/1")
+    b = art("AWS", "Lancement du service dans une nouvelle région canadienne aujourd'hui", "https://aws.test/2")
+    assert len(dedupe([a, b], seen=[], recent=[], source_order=["AWS"])) == 2

@@ -27,6 +27,8 @@ log = logging.getLogger("veille")
 
 SEEN_DAYS = 30    # une URL déjà publiée dans cette période n'est pas republiée
 RECENT_DAYS = 3   # période de comparaison des titres entre sources
+SUMMARY_BUDGET = 600   # secondes accordées aux résumés ; ensuite, les extraits sont affichés
+API_TIMEOUT = 60       # secondes par appel à l'API Claude
 
 
 def load_env(path: Path) -> None:
@@ -83,7 +85,15 @@ def run_pipeline(config: Config, data_dir: Path, out_dir: Path, now: datetime, f
         log.warning("Résumés sautés : pas de client pour l'API Claude (clé absente ou --sans-resumes)")
     else:
         usage: dict[str, int] = {}
-        articles = summarize_articles(articles, client, config.model_articles, config.summary_cap, usage=usage)
+        waiting = {a.id for a in articles if a.summary is None}
+        articles = summarize_articles(articles, client, config.model_articles, config.summary_cap,
+                                      usage=usage, budget_seconds=SUMMARY_BUDGET)
+        if waiting and not any(a.summary for a in articles if a.id in waiting):
+            # Panne totale (clé invalide, crédit épuisé, API hors service) : la page sort quand
+            # même avec les extraits, mais GitHub Actions affiche un avertissement sur l'exécution.
+            log.error("Aucun des %d articles en attente n'a pu être résumé : voir les avertissements ci-dessus", len(waiting))
+            print("::warning title=Veille quotidienne::Aucun résumé produit par l'API Claude ; "
+                  "la page affiche les extraits des sources. Voir le journal de l'exécution.", flush=True)
         digest = daily_digest(articles, config.sections, client, config.model_digest, usage=usage)
         log.info("Résumés : %d articles résumés, %d sans résumé, résumé du jour %s ; %d jetons en entrée, %d en sortie",
                  sum(1 for a in articles if a.summary), sum(1 for a in articles if not a.summary),
@@ -106,7 +116,8 @@ def _make_client():
     if not os.environ.get("ANTHROPIC_API_KEY"):
         return None
     import anthropic  # importé ici pour que `build` fonctionne sans le SDK
-    return anthropic.Anthropic()  # lit ANTHROPIC_API_KEY dans l'environnement
+    # Délai court et une seule relance : une API lente ne doit pas bloquer l'édition.
+    return anthropic.Anthropic(timeout=API_TIMEOUT, max_retries=1)  # clé lue dans ANTHROPIC_API_KEY
 
 
 def main(argv: list[str] | None = None) -> int:

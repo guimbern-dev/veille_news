@@ -31,11 +31,9 @@ def normalize_url(url: str) -> str:
 
 def normalize_title(title: str) -> str:
     """Titre réduit à ses mots : minuscules, sans accents, ponctuation ni nom de marque final."""
-    title = title.split(" | ")[0]  # « Titre | Source »
-    # « Titre - Source » : on ne retire la fin que si elle est courte et le titre assez long.
-    match = re.match(r"^(.*\S)\s+[-–—]\s+(\S+(?:\s+\S+){0,2})$", title)
-    if match and len(match.group(1).split()) >= 4:
-        title = match.group(1)
+    # « Titre | Source ». Un suffixe « - Source » n'est pas retiré ici : il peut faire partie
+    # du titre (« Résultats du trimestre - Banque Nationale ») ; titles_match le tolère.
+    title = title.split(" | ")[0]
     ascii_title = unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode()
     return re.sub(r"[^a-z0-9]+", " ", ascii_title.lower()).strip()
 
@@ -50,8 +48,13 @@ def titles_match(a: str, b: str) -> bool:
     wa, wb = na.split(), nb.split()
     if min(len(wa), len(wb)) < MIN_WORDS_FUZZY:
         return False
-    # Comparaison mot à mot : un seul mot différent (« OpenAI » / « Google ») change la nouvelle.
-    return SequenceMatcher(None, wa, wb).ratio() >= TITLE_THRESHOLD
+    # Comparaison mot à mot. Des mots ajoutés ou retirés (un article, « - Le Devoir ») sont
+    # tolérés ; un mot remplacé par un autre (« OpenAI » / « Google », « août » / « septembre »,
+    # « M8g » / « C8g ») désigne une autre nouvelle, quelle que soit la longueur du titre.
+    matcher = SequenceMatcher(None, wa, wb, autojunk=False)
+    if any(tag == "replace" for tag, *_ in matcher.get_opcodes()):
+        return False
+    return matcher.ratio() >= TITLE_THRESHOLD
 
 
 def dedupe(articles: list[Article], seen: list[Article], recent: list[Article],
@@ -82,7 +85,11 @@ def dedupe(articles: list[Article], seen: list[Article], recent: list[Article],
     for article in fresh:
         key = normalize_url(article.url)
         for group in groups:
-            if any(normalize_url(g.url) == key or titles_match(g.title, article.title) for g in group):
+            # Deux articles d'une même source à des adresses différentes sont deux articles,
+            # même si leurs titres se ressemblent (séries d'annonces, publications statistiques).
+            if any(normalize_url(g.url) == key
+                   or (g.source != article.source and titles_match(g.title, article.title))
+                   for g in group):
                 group.append(article)
                 break
         else:

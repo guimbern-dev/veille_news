@@ -42,6 +42,9 @@
 {% if q.change %}
           <span class="variation">{{ q.change }}</span>
 {% endif %}
+{% if q.date %}
+          <span class="date">{{ q.date }}</span>
+{% endif %}
         </li>
 {% endfor %}
       </ul>

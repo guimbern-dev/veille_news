@@ -173,3 +173,15 @@ def test_main_build_and_bad_config(tmp_path, monkeypatch, capsys):
     (tmp_path / "config.yaml").write_text("rubriques: []\n", encoding="utf-8")
     assert main(["build"]) == 2
     assert "modeles" in capsys.readouterr().err
+
+
+# --- Corrections issues de la revue finale (I4) ---
+
+def test_total_failure_of_claude_is_flagged_for_github(tmp_path, capsys):
+    run(tmp_path, client=FakeClient(broken=True))
+    assert "::warning" in capsys.readouterr().out
+
+
+def test_no_flag_when_summaries_work(tmp_path, capsys):
+    run(tmp_path, client=FakeClient())
+    assert "::warning" not in capsys.readouterr().out

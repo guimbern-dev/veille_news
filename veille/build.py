@@ -31,6 +31,8 @@ NBSP = " "  # espace insécable : séparateur de milliers et espace avant « % 
 WEEKDAYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
 MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
           "septembre", "octobre", "novembre", "décembre"]
+SHORT_MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juill.", "août",
+                "sept.", "oct.", "nov.", "déc."]
 EXCERPT_LIMIT = 300  # longueur de l'extrait affiché quand il n'y a pas de résumé
 
 
@@ -123,12 +125,25 @@ def day_view(data: DayData, config: Config) -> dict:
                 digest.append({"text": point.text, "ids": ids, "section": names.get(point.section, "")})
         digest = digest or None
 
-    quotes = [format_quote(q) for q in data.markets]
-    closes = [q.as_of for q in data.markets if q.as_of]
+    # La « clôture » affichée est celle des indices ; un taux peut porter une date plus
+    # récente (série publiée 7 jours sur 7) sans qu'aucun marché n'ait rouvert.
+    close = None
+    for kind in ("indice", "devise", "taux"):
+        dates = [q.as_of for q in data.markets if q.kind == kind and q.as_of]
+        if dates:
+            close = max(dates)
+            break
+    quotes = []
+    for q in data.markets:
+        view = format_quote(q)
+        # Une cote plus ancienne que la clôture annoncée (jour férié d'une seule bourse) porte sa date.
+        stale = q.kind != "taux" and q.as_of is not None and q.as_of != close
+        view["date"] = f"{q.as_of.day} {SHORT_MONTHS[q.as_of.month - 1]}" if stale else ""
+        quotes.append(view)
     return {
         "day": data.day, "title": french_date(data.day), "sections": sections, "digest": digest,
         "quotes": quotes,
-        "close": french_date(max(closes), weekday=False).rsplit(" ", 1)[0] if closes else "",
+        "close": french_date(close, weekday=False).rsplit(" ", 1)[0] if close else "",
         "count": len(shown_ids), "failed": len(data.failed_sources),
         "generated": data.generated_at,
     }

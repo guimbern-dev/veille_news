@@ -249,3 +249,18 @@ def test_format_quote_flat_and_small_moves():
     flat = format_quote(quote("X", "indice", 100.0, 0.004))
     assert (flat["direction"], flat["change"].replace("\xa0", " ")) == ("stable", "= 0,0 %")
     assert format_quote(quote("Y", "indice", 100.0, None))["change"] == ""
+
+
+# --- Corrections issues de la revue finale (I2) ---
+
+def test_close_date_comes_from_indices_not_from_rates():
+    from veille.build import day_view
+    data = DayData(day=date(2026, 11, 16), generated_at=GENERATED, articles=[], digest=None, failed_sources=[],
+                   markets=[quote("TSX", "indice", 100.0, 0.1, as_of=date(2026, 11, 12)),
+                            quote("S&P 500", "indice", 100.0, 0.1, as_of=date(2026, 11, 13)),
+                            quote("CAD/USD", "devise", 0.7, 0.1, as_of=date(2026, 11, 13)),
+                            quote("Taux Fed", "taux", 4.0, 0.0, as_of=date(2026, 11, 15))])
+    view = day_view(data, CONFIG)
+    assert view["close"] == "13 novembre"
+    dates = {q["name"]: q["date"] for q in view["quotes"]}
+    assert dates == {"TSX": "12 nov.", "S&P 500": "", "CAD/USD": "", "Taux Fed": ""}
