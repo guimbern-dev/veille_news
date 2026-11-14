@@ -26,22 +26,22 @@ rubriques:
   - nom: Finance et marchés
     max_articles: 10
     sources:
-      - {nom: Banque du Canada, url: "https://www.banqueducanada.ca/feed/"}
+      - {nom: Banque du Canada, url: "https://www.banqueducanada.ca/content_type/communiques/feed/"}
       - {nom: Réserve fédérale, url: "https://www.federalreserve.gov/feeds/press_all.xml"}
-      - {nom: Statistique Canada, url: "https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/rss-fra.xml"}
+      - {nom: Statistique Canada, url: "https://www150.statcan.gc.ca/n1/rss/dai-quo/0-fra.atom"}
       - {nom: Radio-Canada Économie, url: "https://ici.radio-canada.ca/rss/5717"}
       - {nom: La Presse Affaires, url: "https://www.lapresse.ca/affaires/rss"}
-      - {nom: Les Affaires, url: "https://www.lesaffaires.com/feed/"}
-      - {nom: Financial Post, url: "https://financialpost.com/feed"}
+      - {nom: Le Devoir Économie, url: "https://www.ledevoir.com/rss/section/economie.xml"}
+      - {nom: The Globe and Mail, url: "https://www.theglobeandmail.com/arc/outboundfeeds/rss/category/business/"}
       - {nom: CNBC, url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"}
 
   - nom: Intelligence artificielle
     max_articles: 10
     sources:
-      - {nom: Anthropic, url: "https://www.anthropic.com/rss.xml"}
       - {nom: OpenAI, url: "https://openai.com/news/rss.xml"}
       - {nom: Google DeepMind, url: "https://deepmind.google/blog/rss.xml"}
-      - {nom: Meta AI, url: "https://ai.meta.com/blog/rss/"}
+      - {nom: Google IA, url: "https://blog.google/technology/ai/rss/"}
+      - {nom: Meta Engineering, url: "https://engineering.fb.com/category/ai-research/feed/"}
       - {nom: Hugging Face, url: "https://huggingface.co/blog/feed.xml"}
       - {nom: Simon Willison, url: "https://simonwillison.net/atom/everything/"}
       - {nom: The Verge IA, url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"}
