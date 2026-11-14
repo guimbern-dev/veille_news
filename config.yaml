@@ -1,0 +1,72 @@
+# Configuration de la veille quotidienne.
+# Tout se règle ici, sans toucher au code. Voir le README pour les détails.
+
+general:
+  fuseau: America/Toronto   # fuseau qui détermine la date de l'édition
+  fenetre_heures: 36        # on garde les nouvelles publiées dans cette fenêtre
+  plafond_resumes: 40       # nombre maximal d'articles résumés par rubrique et par jour
+
+modeles:
+  articles: claude-haiku-5-5         # résumé de chaque article
+  resume_du_jour: claude-sonnet-5-5  # les 5 à 7 points clés du jour
+
+# Bandeau de chiffres. type : indice, taux ou devise.
+# fournisseur : valet (Banque du Canada), fred (Réserve fédérale de Saint-Louis), stooq.
+marches:
+  - {nom: "TSX", fournisseur: stooq, symbole: "^tsx", type: indice}
+  - {nom: "S&P 500", fournisseur: fred, symbole: SP500, type: indice}
+  - {nom: "Nasdaq", fournisseur: fred, symbole: NASDAQCOM, type: indice}
+  - {nom: "CAD/USD", fournisseur: valet, symbole: FXCADUSD, type: devise}
+  - {nom: "Taux BdC", fournisseur: valet, symbole: V39079, type: taux}
+  - {nom: "Taux Fed", fournisseur: fred, symbole: DFEDTARU, symbole_bas: DFEDTARL, type: taux}
+
+# L'ordre des rubriques est l'ordre d'affichage.
+# L'ordre des sources fixe la priorité quand deux sources couvrent la même nouvelle.
+rubriques:
+  - nom: Finance et marchés
+    max_articles: 10
+    sources:
+      - {nom: Banque du Canada, url: "https://www.banqueducanada.ca/feed/"}
+      - {nom: Réserve fédérale, url: "https://www.federalreserve.gov/feeds/press_all.xml"}
+      - {nom: Statistique Canada, url: "https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/rss-fra.xml"}
+      - {nom: Radio-Canada Économie, url: "https://ici.radio-canada.ca/rss/5717"}
+      - {nom: La Presse Affaires, url: "https://www.lapresse.ca/affaires/rss"}
+      - {nom: Les Affaires, url: "https://www.lesaffaires.com/feed/"}
+      - {nom: Financial Post, url: "https://financialpost.com/feed"}
+      - {nom: CNBC, url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"}
+
+  - nom: Intelligence artificielle
+    max_articles: 10
+    sources:
+      - {nom: Anthropic, url: "https://www.anthropic.com/rss.xml"}
+      - {nom: OpenAI, url: "https://openai.com/news/rss.xml"}
+      - {nom: Google DeepMind, url: "https://deepmind.google/blog/rss.xml"}
+      - {nom: Meta AI, url: "https://ai.meta.com/blog/rss/"}
+      - {nom: Hugging Face, url: "https://huggingface.co/blog/feed.xml"}
+      - {nom: Simon Willison, url: "https://simonwillison.net/atom/everything/"}
+      - {nom: The Verge IA, url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"}
+      - {nom: Ars Technica IA, url: "https://arstechnica.com/ai/feed/"}
+      - {nom: MIT Technology Review, url: "https://www.technologyreview.com/topic/artificial-intelligence/feed"}
+
+  - nom: Technologie et infrastructure TI
+    max_articles: 10
+    sources:
+      - {nom: Centre canadien pour la cybersécurité, url: "https://www.cyber.gc.ca/api/cccs/rss/v1/get?feed=alerts_advisories&lang=fr"}
+      - {nom: CISA, url: "https://www.cisa.gov/cybersecurity-advisories/all.xml"}
+      - {nom: BleepingComputer, url: "https://www.bleepingcomputer.com/feed/"}
+      - {nom: The Hacker News, url: "https://feeds.feedburner.com/TheHackersNews"}
+      - {nom: Krebs on Security, url: "https://krebsonsecurity.com/feed/"}
+      - {nom: The Register, url: "https://www.theregister.com/headlines.atom"}
+      - {nom: AWS, url: "https://aws.amazon.com/about-aws/whats-new/recent/feed/"}
+      - {nom: Azure, url: "https://azure.microsoft.com/en-us/blog/feed/"}
+      - {nom: Google Cloud, url: "https://cloudblog.withgoogle.com/rss/"}
+      - {nom: Cloudflare, url: "https://blog.cloudflare.com/rss/"}
+
+  - nom: Québec/Canada
+    max_articles: 8
+    sources:
+      - {nom: Radio-Canada, url: "https://ici.radio-canada.ca/rss/4159"}
+      - {nom: Radio-Canada Politique, url: "https://ici.radio-canada.ca/rss/4175"}
+      - {nom: La Presse, url: "https://www.lapresse.ca/actualites/rss"}
+      - {nom: Le Devoir, url: "https://www.ledevoir.com/rss/manchettes.xml"}
+      - {nom: CBC, url: "https://www.cbc.ca/webfeed/rss/rss-canada"}
