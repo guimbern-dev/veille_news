@@ -24,6 +24,8 @@ from .dedupe import normalize_url
 from .models import Article
 
 log = logging.getLogger(__name__)
+# httpx journalise chaque URL au niveau INFO ; certaines contiennent une clé d'API.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 # Fonction qui télécharge une URL ; injectable pour tester sans réseau.
 Fetch = Callable[[str], bytes]

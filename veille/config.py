@@ -13,7 +13,7 @@ from pathlib import Path
 
 import yaml
 
-PROVIDERS = ("valet", "fred", "stooq", "twelvedata")
+PROVIDERS = ("valet", "fred", "twelvedata")
 KINDS = ("indice", "taux", "devise")
 
 

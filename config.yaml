@@ -11,9 +11,9 @@ modeles:
   resume_du_jour: claude-sonnet-5-5  # les 5 à 7 points clés du jour
 
 # Bandeau de chiffres. type : indice, taux ou devise.
-# fournisseur : valet (Banque du Canada), fred (Réserve fédérale de Saint-Louis), stooq.
+# fournisseur : valet (Banque du Canada), fred (clé FRED_API_KEY), twelvedata (clé TWELVEDATA_API_KEY).
 marches:
-  - {nom: "TSX", fournisseur: stooq, symbole: "^tsx", type: indice}
+  - {nom: "TSX", fournisseur: twelvedata, symbole: GSPTSE, type: indice}
   - {nom: "S&P 500", fournisseur: fred, symbole: SP500, type: indice}
   - {nom: "Nasdaq", fournisseur: fred, symbole: NASDAQCOM, type: indice}
   - {nom: "CAD/USD", fournisseur: valet, symbole: FXCADUSD, type: devise}
