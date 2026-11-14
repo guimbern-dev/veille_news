@@ -56,7 +56,7 @@
 
 ---
 
-### Tâche 1 : squelette du projet et configuration
+### Task 1: squelette du projet et configuration
 
 **Fichiers :** créer `pyproject.toml`, `.gitignore`, `.env.example`, `config.yaml`, `veille/__init__.py`, `veille/config.py`, `tests/test_config.py`.
 
@@ -112,7 +112,7 @@ def test_invalid_config_raises_with_location(tmp_path, broken):
 
 ---
 
-### Tâche 2 : modèles et stockage
+### Task 2: modèles et stockage
 
 **Fichiers :** créer `veille/models.py`, `veille/store.py`, `tests/test_store.py`.
 
@@ -180,7 +180,7 @@ def test_load_previous_excludes_the_day_itself(tmp_path):
 
 ---
 
-### Tâche 3 : collecte des flux
+### Task 3: collecte des flux
 
 **Fichiers :** créer `veille/collect.py`, `tests/test_collect.py`, `tests/fixtures/rss_simple.xml`, `atom_simple.xml`, `rss_sale.xml`.
 
@@ -243,7 +243,7 @@ def test_garbage_bytes_count_as_a_failed_source():
 
 ---
 
-### Tâche 4 : dédoublonnage
+### Task 4: dédoublonnage
 
 **Fichiers :** créer `veille/dedupe.py`, `tests/test_dedupe.py` ; modifier `veille/collect.py` pour que `article_id` utilise `normalize_url`.
 
@@ -304,7 +304,7 @@ def test_undated_article_is_kept_once_then_dropped():
 
 ---
 
-### Tâche 5 : chiffres de marché
+### Task 5: chiffres de marché
 
 **Fichiers :** créer `veille/markets.py`, `tests/test_markets.py`, `tests/fixtures/valet_fxcadusd.json`, `fred_sp500.json`, `stooq_tsx.csv`.
 
@@ -359,7 +359,7 @@ def test_single_observation_gives_value_without_change(): ...
 
 ---
 
-### Tâche 6 : résumés par Claude
+### Task 6: résumés par Claude
 
 **Fichiers :** créer `veille/summarize.py`, `tests/test_summarize.py`.
 
@@ -424,7 +424,7 @@ def test_digest_returns_none_on_error_or_too_few_points(): ...
 
 ---
 
-### Tâche 7 : génération du site
+### Task 7: génération du site
 
 **Fichiers :** créer `veille/build.py`, `templates/base.html`, `templates/day.html`, `templates/archive.html`, `static/style.css`, `static/theme.js`, `tests/test_build.py`.
 
@@ -492,7 +492,7 @@ def test_failed_sources_footer(site): ...
 
 ---
 
-### Tâche 8 : commande et enchaînement
+### Task 8: commande et enchaînement
 
 **Fichiers :** créer `veille/cli.py`, `veille/__main__.py`, `tests/test_cli.py`.
 
@@ -542,7 +542,7 @@ def test_day_uses_toronto_date(tmp_path):
 
 ---
 
-### Tâche 9 : planification, déploiement et README
+### Task 9: planification, déploiement et README
 
 **Fichiers :** créer `.github/workflows/daily.yml`, `README.md`.
 
