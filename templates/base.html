@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light dark">
+  <title>{{ page_title }}</title>
+  {# Applique le thème choisi avant le premier affichage, pour éviter un éclair blanc. #}
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="{{ root }}static/style.css">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header class="entete">
+    <a class="marque" href="{{ root }}index.html">Veille</a>
+    <nav aria-label="Navigation principale">
+      <a href="{{ root }}archive.html">Archive</a>
+      <a href="{{ root }}recherche.html">Recherche</a>
+      <button id="theme" type="button" title="Changer de thème">Thème : auto</button>
+    </nav>
+  </header>
+  <main>
+{% block main %}{% endblock %}
+  </main>
+  <footer class="pied">
+{% block footer %}{% endblock %}
+    <p>Résumés générés automatiquement à partir des extraits des flux ; se référer à la source pour le texte complet.</p>
+  </footer>
+  <script src="{{ root }}static/theme.js"></script>
+</body>
+</html>

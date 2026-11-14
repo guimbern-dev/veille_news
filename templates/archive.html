@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <h1>Archive</h1>
+{% for month in months %}
+    <section class="mois">
+      <h2>{{ month.label }}</h2>
+      <ul class="jours">
+{% for day in month.days %}
+        <li><a href="{{ day.href }}">{{ day.title | capitalize }}</a> <span class="compte">{{ day.count }}</span></li>
+{% endfor %}
+      </ul>
+    </section>
+{% endfor %}
+{% endblock %}

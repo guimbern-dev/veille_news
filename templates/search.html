@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <link rel="stylesheet" href="pagefind/pagefind-ui.css">
+{% endblock %}
+
+{% block main %}
+    <h1>Recherche</h1>
+    <p class="aide">Cherche un mot-clé dans les titres et les résumés de toutes les éditions archivées.</p>
+    <div id="recherche"></div>
+    <noscript><p>La recherche nécessite JavaScript. L’<a href="archive.html">archive par date</a> reste accessible.</p></noscript>
+    {# L'index est produit par Pagefind à la génération du site. #}
+    <script src="pagefind/pagefind-ui.js"></script>
+    <script>
+      if (window.PagefindUI) {
+        new PagefindUI({ element: "#recherche", showSubResults: true, showImages: false, autofocus: true });
+      } else {
+        document.getElementById("recherche").textContent = "L’index de recherche n’est pas disponible pour le moment.";
+      }
+    </script>
+{% endblock %}

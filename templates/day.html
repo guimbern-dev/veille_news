@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{# Une carte d'article : titre lié à la source, résumé (ou extrait), puis provenance. #}
+{% macro card(a) %}
+      <article class="article{% if a.importance >= 4 %} important{% endif %}" id="a-{{ a.id }}">
+        <h3 id="t-{{ a.id }}"><a href="{{ a.url }}" rel="noopener noreferrer">{{ a.title }}</a></h3>
+{% if a.summary %}
+        <p class="resume">{{ a.summary }}</p>
+{% elif a.excerpt %}
+        <p class="resume extrait"><span class="mention">Extrait de la source</span> {{ a.excerpt }}</p>
+{% endif %}
+        <p class="provenance">
+          <span class="source">{{ a.source }}</span>{% if a.when %} · {{ a.when }}{% endif %}
+{% if a.also %}
+          · aussi couvert par :
+{% for other in a.also %}
+          <a href="{{ other.url }}" rel="noopener noreferrer">{{ other.name }}</a>{% if not loop.last %}, {% endif %}
+{% endfor %}
+{% endif %}
+        </p>
+      </article>
+{% endmacro %}
+
+{% block main %}
+    <h1>{{ view.title | capitalize }}</h1>
+    <p class="voisins">
+{% if older %}
+      <a href="{% if not root %}jour/{% endif %}{{ older.day.isoformat() }}.html">← {{ older.title }}</a>
+{% endif %}
+{% if newer %}
+      <a href="{% if not root %}jour/{% endif %}{{ newer.day.isoformat() }}.html">{{ newer.title }} →</a>
+{% endif %}
+    </p>
+
+{% if view.quotes %}
+    <section class="marches" aria-label="Chiffres de marché">
+      <ul>
+{% for q in view.quotes %}
+        <li class="{{ q.direction }}">
+          <span class="nom">{{ q.name }}</span>
+          <span class="valeur">{{ q.value }}</span>
+{% if q.change %}
+          <span class="variation">{{ q.change }}</span>
+{% endif %}
+        </li>
+{% endfor %}
+      </ul>
+{% if view.close %}
+      <p class="cloture">Clôture du {{ view.close }}</p>
+{% endif %}
+    </section>
+{% endif %}
+
+{% if view.digest %}
+    <section class="resume-du-jour" aria-labelledby="titre-resume">
+      <h2 id="titre-resume">Résumé du jour</h2>
+      <ul>
+{% for point in view.digest %}
+        <li>
+          {{ point.text }}
+{% if point.section %}
+          <span class="etiquette">{{ point.section }}</span>
+{% endif %}
+          <span class="renvois">
+{% for id in point.ids %}
+            <a href="#a-{{ id }}" aria-label="Voir l’article {{ loop.index }}">{{ loop.index }}</a>
+{% endfor %}
+          </span>
+        </li>
+{% endfor %}
+      </ul>
+    </section>
+{% endif %}
+
+    <div class="rubriques"{% if indexed %} data-pagefind-body{% endif %}>
+{% for section in view.sections %}
+    <section class="rubrique" id="r-{{ section.slug }}">
+      <h2>{{ section.name }}</h2>
+{% if not section.visible %}
+      <p class="vide">Aucune nouvelle aujourd’hui.</p>
+{% endif %}
+{% for a in section.visible %}
+{{ card(a) }}
+{% endfor %}
+{% if section.folded %}
+      <details class="plus">
+        <summary>Afficher {{ section.folded | length }} autre{{ 's' if section.folded | length > 1 }} article{{ 's' if section.folded | length > 1 }}</summary>
+{% for a in section.folded %}
+{{ card(a) }}
+{% endfor %}
+      </details>
+{% endif %}
+    </section>
+{% endfor %}
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <p>
+      Édition générée le {{ view.generated.strftime("%Y-%m-%d à %H:%M") }} UTC.
+{% if view.failed %}
+      {{ view.failed }} source{{ 's' if view.failed > 1 }} indisponible{{ 's' if view.failed > 1 }} lors de la collecte.
+{% endif %}
+    </p>
+{% endblock %}
