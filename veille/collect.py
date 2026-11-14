@@ -20,6 +20,7 @@ import feedparser
 import httpx
 
 from .config import Config, Source
+from .dedupe import normalize_url
 from .models import Article
 
 log = logging.getLogger(__name__)
@@ -43,8 +44,8 @@ def http_fetch(url: str) -> bytes:
 
 
 def article_id(url: str) -> str:
-    """Identifiant court et stable d'un article, dérivé de son URL."""
-    return hashlib.sha1(url.encode("utf-8")).hexdigest()[:12]
+    """Identifiant court et stable d'un article, dérivé de son URL normalisée."""
+    return hashlib.sha1(normalize_url(url).encode("utf-8")).hexdigest()[:12]
 
 
 class _TextExtractor(HTMLParser):
