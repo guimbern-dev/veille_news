@@ -2,7 +2,14 @@
 
 {# Une carte d'article : titre lié à la source, résumé (ou extrait), puis provenance. #}
 {% macro card(a) %}
-      <article class="article{% if a.importance >= 4 %} important{% endif %}" id="a-{{ a.id }}">
+      <article class="article{% if a.importance >= 4 %} important{% endif %}{% if a.image %} illustre{% endif %}" id="a-{{ a.id }}">
+{% if a.image %}
+        {# Image du flux, servie par la source elle-même. Décorative : le titre porte déjà le lien. #}
+        <a class="vignette" href="{{ a.url }}" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+          <img src="{{ a.image }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.remove()">
+        </a>
+{% endif %}
+        <div class="texte">
         <h3 id="t-{{ a.id }}"><a href="{{ a.url }}" rel="noopener noreferrer">{{ a.title }}</a></h3>
 {% if a.summary %}
         <p class="resume">{{ a.summary }}</p>
@@ -18,6 +25,7 @@
 {% endfor %}
 {% endif %}
         </p>
+        </div>
       </article>
 {% endmacro %}
 

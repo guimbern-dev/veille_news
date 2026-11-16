@@ -6,7 +6,8 @@ technologie et infrastructure TI, Québec/Canada.
 
 - **Résumé du jour** : 5 à 7 points clés, toutes rubriques confondues.
 - **Bandeau de marché** : actions canadiennes (FNB EWC), S&P 500, Nasdaq, CAD/USD, taux de la Banque du Canada et de la Fed.
-- **Par article** : un résumé de 2-3 phrases, le nom de la source et le lien vers l'original.
+- **Par article** : un résumé de 2-3 phrases, le nom de la source, le lien vers l'original et,
+  quand le flux en propose une, une image d'illustration.
 - **Archive par date** et **recherche par mot-clé**.
 - **Mode sombre**, lisible sur ordinateur comme sur cellulaire.
 
@@ -140,6 +141,8 @@ jetons consommés est écrit dans le journal de chaque exécution.
 - Seuls les flux RSS/Atom publics et des API officielles sont lus ; aucune page d'article n'est téléchargée.
 - Claude reçoit uniquement le titre et l'extrait fournis par le flux.
 - Chaque article affiche le nom de sa source et un lien vers l'original.
+- Les images sont celles que les flux proposent eux-mêmes. Seule leur adresse est enregistrée : elles restent
+  hébergées par la source, ne sont jamais copiées dans le dépôt, et mènent à l'article d'origine.
 - Une source qui bloque les lecteurs automatisés n'est pas contournée : elle est retirée de la configuration.
 
 ## Limites connues
@@ -150,5 +153,7 @@ jetons consommés est écrit dans le journal de chaque exécution.
 - **Pas d'indice TSX** : aucune source gratuite ne le fournit chaque jour. La case « Canada (EWC) » montre le
   prix d'un FNB d'actions canadiennes coté à New York, en dollars américains ; sa variation inclut l'effet du taux de change.
 - **Recherche** : un résultat correspond à une édition ; au plus trois articles correspondants y sont listés.
+- **Articles sans image** : environ un tiers des sources (Banque du Canada, Fed, Statistique Canada, Le Devoir,
+  CNBC, OpenAI, AWS…) ne mettent pas d'image dans leur flux ; leurs articles s'affichent sans vignette.
 - **Sources sans flux** : Anthropic et Meta AI n'offrent pas de flux RSS officiel ; leurs annonces
   arrivent par les médias spécialisés de la rubrique.

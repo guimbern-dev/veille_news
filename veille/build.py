@@ -98,7 +98,8 @@ def _article_view(article: Article, now: datetime) -> dict:
         excerpt = excerpt[:EXCERPT_LIMIT].rsplit(" ", 1)[0].rstrip(" ,;:.") + "…"
     return {"id": article.id, "title": article.title, "url": article.url, "source": article.source,
             "summary": article.summary, "excerpt": excerpt, "importance": article.importance or 0,
-            "when": relative_time(article.published, now), "also": article.also_covered_by}
+            "when": relative_time(article.published, now), "also": article.also_covered_by,
+            "image": article.image}
 
 
 def day_view(data: DayData, config: Config) -> dict:

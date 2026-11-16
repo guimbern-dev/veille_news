@@ -112,3 +112,47 @@ def test_entries_dated_far_in_the_future_are_ignored():
             + "</channel></rss>").encode()
     arts, _ = collect(config(SRC), NOW, fetch=lambda url: feed)
     assert [a.title for a in arts] == ["dans-2-heures"]
+
+
+# --- Image d'illustration fournie par le flux ---
+
+def one_item(extra: str, ns: str = "") -> bytes:
+    return (f'<?xml version="1.0"?><rss version="2.0" {ns}><channel><title>T</title><item><title>Titre</title>'
+            f'<link>https://exemple.test/a</link>{extra}</item></channel></rss>').encode()
+
+
+MEDIA = 'xmlns:media="http://search.yahoo.com/mrss/"'
+
+
+def image_of(extra: str, ns: str = "") -> str | None:
+    return parse_feed(one_item(extra, ns), SRC, "ia")[0].image
+
+
+def test_image_from_enclosure():
+    assert image_of('<enclosure url="https://img.test/a.jpg" type="image/jpeg" length="1"/>') == "https://img.test/a.jpg"
+
+
+def test_image_from_media_thumbnail_and_media_content():
+    assert image_of('<media:thumbnail url="https://img.test/t.png"/>', MEDIA) == "https://img.test/t.png"
+    assert image_of('<media:content url="https://img.test/c.webp" medium="image"/>', MEDIA) == "https://img.test/c.webp"
+
+
+def test_image_from_the_html_of_the_excerpt():
+    html = '&lt;p&gt;Texte&lt;/p&gt;&lt;img src="https://img.test/dans-le-texte.jpg" alt="x"&gt;'
+    assert image_of(f"<description>{html}</description>") == "https://img.test/dans-le-texte.jpg"
+
+
+def test_no_image_when_the_feed_gives_none():
+    assert image_of("<description>Texte seul.</description>") is None
+
+
+def test_non_image_enclosure_and_unsafe_urls_are_ignored():
+    assert image_of('<enclosure url="https://img.test/balado.mp3" type="audio/mpeg" length="1"/>') is None
+    assert image_of('<enclosure url="http://img.test/a.jpg" type="image/jpeg" length="1"/>') is None   # pas en https
+    assert image_of('<media:thumbnail url="javascript:alert(1)"/>', MEDIA) is None
+    assert image_of('&lt;img src="data:image/gif;base64,R0lGOD"&gt;'.join(["<description>", "</description>"])) is None
+
+
+def test_tracking_pixels_are_ignored():
+    html = '&lt;img src="https://stats.test/p.gif" width="1" height="1"&gt;'
+    assert image_of(f"<description>{html}</description>") is None

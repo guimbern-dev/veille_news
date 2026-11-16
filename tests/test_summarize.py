@@ -210,3 +210,19 @@ def test_digest_gives_up_after_two_attempts():
     client = FakeClient({}, default=digest_reply())
     assert daily_digest(summarized(), SECTIONS, client, "m") is None
     assert len(client.calls) == 2
+
+
+# --- Résumé du jour resserré : peu de renvois par point ---
+
+def test_digest_keeps_at_most_four_references_per_point():
+    many = [art(f"n{i}", summary="R.", importance=4) for i in range(6)]
+    ids = [a.id for a in many]
+    client = FakeClient({}, default=digest_reply(("Un", "ia", ids), ("Deux", "ia", ids[:1]), ("Trois", "ia", ids[1:2])))
+    points = daily_digest(many, SECTIONS, client, "m")
+    assert points[0].article_ids == ids[:4]
+
+
+def test_digest_prompt_asks_for_short_points():
+    client = FakeClient({}, default=digest_reply(("Un", "ia", ["a1"]), ("Deux", "ia", ["a2"]), ("Trois", "finance", ["f1"])))
+    daily_digest(summarized(), SECTIONS, client, "m")
+    assert "40 mots" in client.sent_text() and "4 identifiants" in client.sent_text()

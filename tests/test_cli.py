@@ -199,3 +199,13 @@ def test_rerun_with_failing_digest_keeps_the_previous_one(tmp_path):
     first = run(tmp_path, client=FakeClient())
     again = run(tmp_path, now=NOW + timedelta(hours=1), client=FakeClient(broken=True))
     assert again.digest == first.digest
+
+
+# --- Relance : une image apparue dans le flux complète l'article déjà enregistré ---
+
+def test_rerun_fills_in_missing_images(tmp_path):
+    run(tmp_path, client=None)
+    def with_images(url):
+        return feed(THREE).replace(b"</item>", b'<enclosure url="https://img.test/x.jpg" type="image/jpeg" length="1"/></item>')
+    again = run_pipeline(CFG, tmp_path / "data", tmp_path / "site", NOW + timedelta(hours=1), with_images, None, {}, search=False)
+    assert [a.image for a in again.articles] == ["https://img.test/x.jpg"] * 3

@@ -28,6 +28,7 @@ _usage_lock = threading.Lock()
 MAX_PARALLEL = 5          # appels simultanés à l'API
 DIGEST_MIN_IMPORTANCE = 3  # seuls les articles au moins « notables » nourrissent le résumé du jour
 DIGEST_MIN_POINTS = 3      # en dessous, mieux vaut masquer la section
+DIGEST_MAX_REFS = 4        # renvois affichés par point
 DIGEST_ATTEMPTS = 2        # une réponse inutilisable est retentée une fois
 
 ARTICLE_SYSTEM = """\
@@ -62,10 +63,11 @@ note d'importance. Dégage les 5 à 7 points les plus importants de la journée,
 confondues, en regroupant dans un même point les articles qui traitent du même sujet.
 
 Pour chaque point :
-- « texte » : une ou deux phrases en français, qui disent ce qui s'est passé et pourquoi cela \
-compte. N'affirme rien qui ne figure pas dans les résumés fournis.
+- « texte » : deux phrases au plus et 40 mots au maximum, en français : ce qui s'est passé et \
+pourquoi cela compte. Va à l'essentiel, sans énumérer les détails de chaque article. N'affirme \
+rien qui ne figure pas dans les résumés fournis.
 - « rubrique » : l'identifiant de la rubrique principale du point, choisi dans la liste fournie.
-- « articles » : les identifiants des articles sur lesquels le point s'appuie (au moins un).
+- « articles » : de 1 à 4 identifiants, ceux des articles les plus représentatifs du point.
 
 Classe les points du plus important au moins important.
 
@@ -207,7 +209,7 @@ def daily_digest(articles: list[Article], sections: tuple[Section, ...], client,
             points = []
             for raw in data["points"]:
                 text = str(raw["texte"]).strip()
-                ids = [i for i in raw["articles"] if i in by_id]   # identifiants inventés écartés
+                ids = [i for i in raw["articles"] if i in by_id][:DIGEST_MAX_REFS]   # identifiants inventés écartés
                 if not text or not ids:
                     continue
                 section = raw["rubrique"] if raw["rubrique"] in names else by_id[ids[0]].section

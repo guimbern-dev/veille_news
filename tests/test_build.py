@@ -264,3 +264,24 @@ def test_close_date_comes_from_indices_not_from_rates():
     assert view["close"] == "13 novembre"
     dates = {q["name"]: q["date"] for q in view["quotes"]}
     assert dates == {"TSX": "12 nov.", "S&P 500": "", "CAD/USD": "", "Taux Fed": ""}
+
+
+# --- Image d'illustration ---
+
+def build_with(tmp_path, *articles):
+    save_day(DayData(day=date(2026, 11, 13), generated_at=GENERATED, markets=[], articles=list(articles),
+                     digest=None, failed_sources=[]), tmp_path / "data")
+    build_site(tmp_path / "data", tmp_path / "site", CONFIG, search=False)
+    return (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
+
+
+def test_article_image_is_shown_lazily_and_links_to_the_source(tmp_path):
+    page = build_with(tmp_path, art("i1", "ia", "Avec image", image="https://img.test/photo.jpg?w=600&h=400"))
+    tag = re.search(r"<img[^>]*>", page).group(0)
+    assert 'src="https://img.test/photo.jpg?w=600&amp;h=400"' in tag
+    assert 'loading="lazy"' in tag and 'referrerpolicy="no-referrer"' in tag and 'alt=""' in tag
+    assert re.search(r'<a class="vignette" href="https://source.test/i1"[^>]*>\s*<img', page)
+
+
+def test_article_without_image_has_no_img_tag(tmp_path):
+    assert "<img" not in build_with(tmp_path, art("i2", "ia", "Sans image"))

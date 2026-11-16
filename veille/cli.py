@@ -10,6 +10,7 @@ import argparse
 import logging
 import os
 import sys
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -72,6 +73,9 @@ def run_pipeline(config: Config, data_dir: Path, out_dir: Path, now: datetime, f
     # gardent leur résumé, et on n'y ajoute que ce qui est nouveau.
     existing = load_day(day, data_dir)
     articles = list(existing.articles) if existing else []
+    # Un article enregistré avant l'ajout des images reçoit celle que son flux propose maintenant.
+    images = {a.id: a.image for a in collected if a.image}
+    articles = [replace(a, image=images[a.id]) if not a.image and a.id in images else a for a in articles]
     known = {a.id for a in articles}
     articles.extend(a for a in fresh if a.id not in known)
     log.info("Dédoublonnage : %d articles retenus (%d nouveaux)", len(articles), len(articles) - len(known))

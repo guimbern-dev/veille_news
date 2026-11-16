@@ -112,6 +112,44 @@ def _excerpt(entry) -> str:
     return clean_text(raw)
 
 
+_IMG_TAG = re.compile(r"<img\b[^>]*>", re.IGNORECASE)
+_ATTR = re.compile(r'''([a-zA-Z-]+)\s*=\s*["']([^"']*)["']''')
+
+
+def _safe_image(url: object) -> str | None:
+    """Garde une adresse d'image seulement si elle est en https et de longueur raisonnable."""
+    url = html.unescape(str(url or "")).strip()
+    return url if url.startswith("https://") and len(url) <= 1000 and not re.search(r"\s", url) else None
+
+
+def _image(entry) -> str | None:
+    """Image d'illustration proposée par le flux lui-même, ou None.
+
+    Ordre de recherche : vignette, média, pièce jointe, puis première image du texte.
+    Seule l'adresse est gardée : l'image reste hébergée par la source et n'est jamais copiée.
+    """
+    candidates = [m.get("url") for m in entry.get("media_thumbnail") or []]
+    for media in entry.get("media_content") or []:
+        kind, url = str(media.get("type", "")), str(media.get("url", ""))
+        if media.get("medium") == "image" or kind.startswith("image/") or (
+                not kind and re.search(r"\.(jpe?g|png|webp|avif)(\?|$)", url, re.IGNORECASE)):
+            candidates.append(url)
+    candidates += [link.get("href") for link in entry.get("enclosures") or []
+                   if str(link.get("type", "")).startswith("image/")]
+    for url in candidates:
+        if safe := _safe_image(url):
+            return safe
+
+    raw = (entry.get("summary") or "") + "".join(c.get("value", "") for c in entry.get("content") or [])
+    for tag in _IMG_TAG.findall(raw):
+        attrs = {name.lower(): value for name, value in _ATTR.findall(tag)}
+        if attrs.get("width") in ("0", "1") or attrs.get("height") in ("0", "1"):
+            continue  # pixel de suivi, pas une illustration
+        if safe := _safe_image(attrs.get("src")):
+            return safe
+    return None
+
+
 def parse_feed(content: bytes, source: Source, section_slug: str) -> list[Article]:
     """Transforme le contenu d'un flux en articles. Lève FeedError si ce n'est pas un flux."""
     parsed = feedparser.parse(content)
@@ -125,7 +163,7 @@ def parse_feed(content: bytes, source: Source, section_slug: str) -> list[Articl
             continue  # sans titre ou sans lien, on ne peut ni afficher ni citer la source
         articles.append(Article(id=article_id(url), title=title, url=url, source=source.name,
                                 section=section_slug, published=_published(entry),
-                                excerpt=_excerpt(entry)))
+                                excerpt=_excerpt(entry), image=_image(entry)))
     return articles
 
 
