@@ -3563,7 +3563,7 @@
         "71b44f734347"
       ],
       "section": "finance-et-marches",
-      "text": "Jensen Huang a démissionné de la direction de Nvidia après des révélations sur une liaison avec une présumée espionne chinoise ; Colette Kress dirige l'entreprise. Washington exige des explications sur la contrebande de puces et le Congrès envisage de durcir les règles d'exportation."
+      "text": "Jensen Huang a démissionné de la direction de Nvidia après des révélations sur une liaison avec une présumée espionne chinoise ; Colette Kress dirige l'entreprise. Bessent et le Congrès exigent des comptes sur la contrebande de puces d'IA vers la Chine."
     },
     {
       "article_ids": [
@@ -3571,14 +3571,14 @@
         "9ddb284b6a18"
       ],
       "section": "quebec-canada",
-      "text": "Zelensky affirme que Washington a proposé l'adhésion à l'OTAN contre des concessions territoriales, et que Moscou a rejeté une trêve énergétique. Les alliés de Kiev préparent leur position."
+      "text": "Selon Zelensky, Washington propose l'adhésion à l'OTAN contre des concessions territoriales, et Moscou a rejeté une trêve énergétique. Les alliés de Kiev préparent leur position."
     },
     {
       "article_ids": [
         "7dc561692bbc"
       ],
       "section": "finance-et-marches",
-      "text": "Une panne de communication a cloué au sol tous les vols aux États-Unis pendant plusieurs heures, avec des retards et annulations dans des aéroports canadiens. La cause profonde reste inconnue, retour à la normale prévu lundi."
+      "text": "La FAA a cloué au sol tous les vols aux États-Unis pendant plusieurs heures à cause d'une panne de communications vétustes. Les aéroports canadiens ont subi annulations et retards, et le retour à la normale est attendu lundi."
     },
     {
       "article_ids": [
@@ -3586,33 +3586,34 @@
         "29c8bcf132e2"
       ],
       "section": "technologie-et-infrastructure-ti",
-      "text": "Cursor confirme qu'une extension Claude Code piégée a été distribuée sur sa place de marché, via une clé volée chez Fireworks AI. Le FBI prévient aussi que des pirates utilisent l'outil ARTEX, propulsé par l'IA, pour automatiser des attaques."
+      "text": "Cursor confirme qu'une extension Claude Code piégée a circulé sur sa place de marché, via une clé volée chez Fireworks AI. Le FBI avertit aussi que l'outil ARTEX, propulsé par l'IA, automatise des cyberattaques."
     },
     {
       "article_ids": [
         "9ce8ac8b4c95"
       ],
       "section": "finance-et-marches",
-      "text": "L'introduction en bourse d'Anthropic arrive alors que le secteur de l'IA cherche un signe positif, avec Nvidia, déjà en turbulence, au centre de l'attention des marchés cette semaine."
+      "text": "L'introduction en bourse d'Anthropic arrive alors que le secteur de l'IA cherche un signe positif, avec Nvidia au centre de l'attention des marchés cette semaine."
     },
     {
       "article_ids": [
-        "ed1c3f703e1a"
+        "ed1c3f703e1a",
+        "dde1b0597465"
       ],
       "section": "quebec-canada",
-      "text": "Mark Carney et Paul St-Pierre Plamondon se sont rencontrés pour la première fois au Sommet de la Francophonie, au Cambodge. Les deux décrivent un échange cordial, sans l'affrontement anticipé, sur l'économie, le commerce avec les États-Unis et l'itinérance."
+      "text": "Mark Carney et Paul St-Pierre Plamondon se sont rencontrés pour la première fois au Sommet de la Francophonie, au Cambodge. Ils ont parlé d'économie et de commerce avec les États-Unis, dans un climat cordial."
     },
     {
       "article_ids": [
-        "59083c3a739b",
-        "4232415e0309"
+        "4232415e0309",
+        "59083c3a739b"
       ],
       "section": "finance-et-marches",
-      "text": "L'économie japonaise s'est contractée de façon inattendue au troisième trimestre à cause des coûts énergétiques élevés, et le ralentissement chinois s'est accentué en octobre, avec des indicateurs sous les prévisions."
+      "text": "Le ralentissement chinois s'est accentué en octobre, production, ventes au détail et investissements manquant les prévisions. Le Japon s'est aussi contracté au troisième trimestre, pénalisé par des coûts énergétiques élevés."
     }
   ],
   "failed_sources": [],
-  "generated_at": "2026-11-16T02:45:49.218289+00:00",
+  "generated_at": "2026-11-16T02:46:35.370549+00:00",
   "markets": [
     {
       "as_of": "2026-11-13",
@@ -3679,11 +3680,11 @@
     },
     {
       "as_of": "2026-11-16",
-      "change_pct": -0.3079,
+      "change_pct": -0.3218,
       "kind": "crypto",
       "name": "Bitcoin (USD)",
       "row": 2,
-      "value": 65149.82,
+      "value": 65140.74,
       "value_low": null
     }
   ]
