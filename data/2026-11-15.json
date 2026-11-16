@@ -3563,7 +3563,7 @@
         "71b44f734347"
       ],
       "section": "finance-et-marches",
-      "text": "Jensen Huang a démissionné de la direction de Nvidia après des révélations sur une liaison avec une présumée espionne chinoise ; Colette Kress assure l'intérim. Washington, Bessent en tête, exige des comptes sur la contrebande de puces, et le Congrès envisage de durcir les exportations."
+      "text": "Jensen Huang a démissionné de la direction de Nvidia après des révélations sur une liaison avec une présumée espionne chinoise ; Colette Kress dirige l'entreprise. Washington exige des explications sur la contrebande de puces et le Congrès envisage de durcir les règles d'exportation."
     },
     {
       "article_ids": [
@@ -3571,14 +3571,14 @@
         "9ddb284b6a18"
       ],
       "section": "quebec-canada",
-      "text": "Zelensky affirme que Washington propose l'adhésion à l'OTAN contre des concessions territoriales, et que Moscou a rejeté une trêve énergétique à Abou Dhabi. Les alliés de Kiev préparent leur position."
+      "text": "Zelensky affirme que Washington a proposé l'adhésion à l'OTAN contre des concessions territoriales, et que Moscou a rejeté une trêve énergétique. Les alliés de Kiev préparent leur position."
     },
     {
       "article_ids": [
         "7dc561692bbc"
       ],
       "section": "finance-et-marches",
-      "text": "La FAA a cloué au sol tous les vols aux États-Unis pendant des heures après une panne d'infrastructures de communication vétustes. Des annulations et retards ont touché Vancouver, Ottawa et Montréal; la cause profonde demeure inconnue."
+      "text": "Une panne de communication a cloué au sol tous les vols aux États-Unis pendant plusieurs heures, avec des retards et annulations dans des aéroports canadiens. La cause profonde reste inconnue, retour à la normale prévu lundi."
     },
     {
       "article_ids": [
@@ -3586,33 +3586,33 @@
         "29c8bcf132e2"
       ],
       "section": "technologie-et-infrastructure-ti",
-      "text": "Cursor confirme qu'une extension Claude Code piégée a circulé sur sa place de marché, via une clé volée à Fireworks AI. Le FBI avertit aussi que l'outil ARTEX, propulsé par l'IA, alimente des cyberattaques mondiales."
+      "text": "Cursor confirme qu'une extension Claude Code piégée a été distribuée sur sa place de marché, via une clé volée chez Fireworks AI. Le FBI prévient aussi que des pirates utilisent l'outil ARTEX, propulsé par l'IA, pour automatiser des attaques."
     },
     {
       "article_ids": [
         "9ce8ac8b4c95"
       ],
       "section": "finance-et-marches",
-      "text": "L'introduction en bourse d'Anthropic et les résultats de Nvidia placent l'IA au centre des marchés cette semaine, dans un secteur en quête d'un signal positif."
+      "text": "L'introduction en bourse d'Anthropic arrive alors que le secteur de l'IA cherche un signe positif, avec Nvidia, déjà en turbulence, au centre de l'attention des marchés cette semaine."
     },
     {
       "article_ids": [
-        "ed1c3f703e1a",
-        "dde1b0597465"
+        "ed1c3f703e1a"
       ],
       "section": "quebec-canada",
-      "text": "Mark Carney et Paul St-Pierre Plamondon se sont rencontrés pour la première fois au Sommet de la Francophonie, au Cambodge. Échange cordial sur l'économie, le commerce avec les États-Unis et l'itinérance, sans l'affrontement anticipé."
+      "text": "Mark Carney et Paul St-Pierre Plamondon se sont rencontrés pour la première fois au Sommet de la Francophonie, au Cambodge. Les deux décrivent un échange cordial, sans l'affrontement anticipé, sur l'économie, le commerce avec les États-Unis et l'itinérance."
     },
     {
       "article_ids": [
-        "cacd64f84fae"
+        "59083c3a739b",
+        "4232415e0309"
       ],
-      "section": "quebec-canada",
-      "text": "Un cinquième militaire est mort après l'incendie de la base de Wainwright, en Alberta, selon les Forces armées canadiennes. Vingt-quatre soldats demeurent hospitalisés."
+      "section": "finance-et-marches",
+      "text": "L'économie japonaise s'est contractée de façon inattendue au troisième trimestre à cause des coûts énergétiques élevés, et le ralentissement chinois s'est accentué en octobre, avec des indicateurs sous les prévisions."
     }
   ],
   "failed_sources": [],
-  "generated_at": "2026-11-16T02:37:53.227480+00:00",
+  "generated_at": "2026-11-16T02:45:49.218289+00:00",
   "markets": [
     {
       "as_of": "2026-11-13",
@@ -3669,21 +3669,21 @@
       "value_low": 3.75
     },
     {
-      "as_of": null,
-      "change_pct": null,
+      "as_of": "2026-11-13",
+      "change_pct": -0.1316,
       "kind": "indice",
       "name": "XEQT",
       "row": 2,
-      "value": null,
+      "value": 45.52,
       "value_low": null
     },
     {
       "as_of": "2026-11-16",
-      "change_pct": -0.2158,
+      "change_pct": -0.3079,
       "kind": "crypto",
       "name": "Bitcoin (USD)",
       "row": 2,
-      "value": 65210.0,
+      "value": 65149.82,
       "value_low": null
     }
   ]
