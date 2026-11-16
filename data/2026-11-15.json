@@ -2720,31 +2720,31 @@
   "digest": [
     {
       "article_ids": [
+        "23c59306d77a",
+        "109e7c320ce6"
+      ],
+      "section": "quebec-canada",
+      "text": "Washington propose à l'Ukraine des concessions territoriales contre une adhésion à l'OTAN, selon Zelensky, qui dit aussi que Moscou a rejeté une trêve énergétique à Abou Dhabi. Cela pourrait redéfinir les négociations de paix."
+    },
+    {
+      "article_ids": [
+        "537a82ef6ee9",
         "ac2a2d7d52b3",
         "770de7745f3f",
-        "024802442c5a",
-        "8c37dc23c16a"
+        "024802442c5a"
       ],
       "section": "finance-et-marches",
-      "text": "Nvidia est en crise : Jensen Huang a démissionné après des révélations, et des investisseurs réclament son retour. Bessent exige un PDG externe, et le Congrès veut resserrer l'exportation de puces vers la Chine."
+      "text": "Après la démission de Jensen Huang, la Maison-Blanche et Bessent veulent savoir si Nvidia a toléré la contrebande de puces vers la Chine, tandis que des investisseurs réclament son retour. Le Congrès envisage de resserrer les exportations de puces IA."
     },
     {
       "article_ids": [
         "0a25bd4b5c03",
         "7dc561692bbc",
-        "5520a656a4df",
+        "dae267a4d069",
         "7129785cba39"
       ],
-      "section": "technologie-et-infrastructure-ti",
-      "text": "Une panne de communication a cloué au sol tous les vols aux États-Unis près de cinq heures vendredi. Les perturbations touchent aussi le Canada, avec retour à la normale prévu lundi; la cause profonde reste inconnue."
-    },
-    {
-      "article_ids": [
-        "23c59306d77a",
-        "109e7c320ce6"
-      ],
-      "section": "quebec-canada",
-      "text": "Zelensky affirme que Washington propose à l'Ukraine une adhésion à l'OTAN en échange de concessions territoriales. Il ajoute que Moscou a rejeté une trêve énergétique lors des discussions à Abou Dhabi."
+      "section": "finance-et-marches",
+      "text": "Un arrêt national des vols ordonné par la FAA a perturbé des milliers de vols aux États-Unis et au Canada. La cause profonde reste inconnue, des routeurs étant évoqués; Trump réclame plus de fonds pour la FAA."
     },
     {
       "article_ids": [
@@ -2752,7 +2752,7 @@
         "2954df36f35d"
       ],
       "section": "finance-et-marches",
-      "text": "L'introduction en bourse d'Anthropic et les turbulences chez Nvidia font de cette semaine un moment charnière pour la thématique de l'IA en bourse, dans un contexte difficile pour le secteur."
+      "text": "L'introduction en bourse d'Anthropic arrive alors que le secteur de l'IA cherche un signe positif. Avec les turbulences chez Nvidia, la semaine s'annonce charnière pour la thématique de l'IA en bourse."
     },
     {
       "article_ids": [
@@ -2761,29 +2761,29 @@
         "29c8bcf132e2"
       ],
       "section": "technologie-et-infrastructure-ti",
-      "text": "Cursor confirme qu'une clé volée chez Fireworks AI a permis de distribuer une extension Claude Code malveillante. Le FBI avertit aussi que l'outil ARTEX, propulsé par l'IA, automatise des cyberattaques."
+      "text": "Cursor confirme qu'une clé volée chez Fireworks AI a permis de distribuer une extension Claude Code malveillante. Le FBI avertit aussi que l'outil ARTEX, propulsé par l'IA, automatise des cyberattaques mondiales."
     },
     {
       "article_ids": [
         "6f6210872137",
-        "6eea1f859136",
-        "1ec299e8ca4a"
+        "1ec299e8ca4a",
+        "6eea1f859136"
       ],
       "section": "quebec-canada",
-      "text": "Mark Carney et Paul St-Pierre Plamondon se sont rencontrés pour la première fois au Cambodge, en marge du Sommet de la Francophonie. Ils ont discuté de commerce avec les États-Unis et d'itinérance, dans un climat cordial."
+      "text": "Mark Carney et le premier ministre du Québec, Paul St-Pierre Plamondon, se sont rencontrés pour la première fois au Cambodge. Ils ont discuté du commerce avec les États-Unis et d'itinérance, et Ottawa appuie la lutte du Québec contre l'itinérance."
     },
     {
       "article_ids": [
         "18fd59a44f5d",
-        "05e460bcfa7f",
-        "cacd64f84fae"
+        "cacd64f84fae",
+        "05e460bcfa7f"
       ],
       "section": "quebec-canada",
-      "text": "Un cinquième militaire est décédé des suites de l'incendie survenu à la base de Wainwright, en Alberta. Selon les Forces armées canadiennes, 24 soldats demeurent hospitalisés."
+      "text": "Un cinquième militaire est mort des suites de l'incendie à la base de Wainwright, en Alberta. Selon les Forces armées canadiennes, 24 soldats demeurent hospitalisés."
     }
   ],
   "failed_sources": [],
-  "generated_at": "2026-11-16T02:12:04.513616+00:00",
+  "generated_at": "2026-11-16T02:14:04.583406+00:00",
   "markets": [
     {
       "as_of": "2026-11-13",
