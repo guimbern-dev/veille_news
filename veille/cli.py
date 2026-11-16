@@ -19,6 +19,7 @@ from .build import build_site
 from .collect import Fetch, collect, http_fetch
 from .config import Config, ConfigError, load_config
 from .dedupe import dedupe
+from .images import fill_images, http_page_head, http_robots
 from .markets import fetch_quotes
 from .models import DayData
 from .store import load_day, load_previous, save_day
@@ -48,11 +49,14 @@ def load_env(path: Path) -> None:
 
 
 def run_pipeline(config: Config, data_dir: Path, out_dir: Path, now: datetime, fetch: Fetch,
-                 client, keys: dict[str, str | None], build: bool = True, search: bool = True) -> DayData:
+                 client, keys: dict[str, str | None], build: bool = True, search: bool = True,
+                 page_fetch=None, robots_fetch=None) -> DayData:
     """Exécute le pipeline pour l'édition du jour et retourne ce qui a été enregistré.
 
     client : client de l'API Claude, ou None pour sauter les résumés.
     keys   : clés des fournisseurs de données de marché.
+    page_fetch, robots_fetch : lecture de l'en-tête d'une page et de robots.txt, pour chercher
+             l'image de partage des articles sans image ; None pour ne lire aucune page.
     Lève SystemExit(1) si aucune nouvelle n'a pu être collectée : rien n'est alors
     écrit, et le site déjà en ligne reste tel quel.
     """
@@ -86,6 +90,9 @@ def run_pipeline(config: Config, data_dir: Path, out_dir: Path, now: datetime, f
 
     # Relance : si le résumé du jour ne peut pas être refait, celui déjà produit est conservé.
     previous_digest = existing.digest if existing else None
+    if page_fetch is not None and robots_fetch is not None:
+        articles = fill_images(articles, page_fetch, robots_fetch)
+
     digest = previous_digest
     if client is None:
         log.warning("Résumés sautés : pas de client pour l'API Claude (clé absente ou --sans-resumes)")
@@ -154,5 +161,7 @@ def main(argv: list[str] | None = None) -> int:
     keys = {"fred": os.environ.get("FRED_API_KEY"), "twelvedata": os.environ.get("TWELVEDATA_API_KEY")}
     client = None if args.sans_resumes else _make_client()
     run_pipeline(config, Path(args.data), Path(args.out), datetime.now(timezone.utc), http_fetch,
-                 client, keys, build=args.command == "run", search=search)
+                 client, keys, build=args.command == "run", search=search,
+                 page_fetch=http_page_head if config.page_images else None,
+                 robots_fetch=http_robots if config.page_images else None)
     return 0

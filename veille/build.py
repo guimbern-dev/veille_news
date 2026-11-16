@@ -8,6 +8,7 @@ https://<compte>.github.io/<dépôt>/.
 """
 from __future__ import annotations
 
+import hashlib
 import logging
 import shutil
 import subprocess
@@ -117,13 +118,17 @@ def day_view(data: DayData, config: Config) -> dict:
                          "folded": views[section.max_articles:]})
 
     names = {s.slug: s.name for s in config.sections}
+    images = {a.id: a.image for a in data.articles if a.image}
     digest = None
     if data.digest:
         digest = []
         for point in data.digest:
             ids = [i for i in point.article_ids if i in shown_ids]
             if ids:  # un point dont aucun article n'est affiché n'a plus de source à citer
-                digest.append({"text": point.text, "ids": ids, "section": names.get(point.section, "")})
+                # Le point est illustré par son premier article qui a une image.
+                illustrated = next((i for i in ids if i in images), None)
+                digest.append({"text": point.text, "ids": ids, "section": names.get(point.section, ""),
+                               "image": images.get(illustrated), "image_id": illustrated})
         digest = digest or None
 
     # La « clôture » affichée est celle des indices ; un taux peut porter une date plus
@@ -184,6 +189,8 @@ def build_site(data_dir: Path, out_dir: Path, config: Config, search: bool = Tru
 
     env = Environment(loader=FileSystemLoader(TEMPLATES_DIR), autoescape=select_autoescape(["html"]),
                       trim_blocks=True, lstrip_blocks=True)
+    # Empreinte des fichiers statiques : un changement de style n'est pas masqué par le cache du navigateur.
+    env.globals["version"] = hashlib.sha1(b"".join(p.read_bytes() for p in sorted(STATIC_DIR.glob("*")) if p.is_file())).hexdigest()[:8]
     views = [day_view(load_day(day, data_dir), config) for day in days]  # du plus récent au plus ancien
 
     (out_dir / "jour").mkdir(parents=True, exist_ok=True)

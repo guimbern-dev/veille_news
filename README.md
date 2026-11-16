@@ -4,10 +4,10 @@ Un tableau de bord personnel qui regroupe chaque matin les nouvelles de la veill
 en français et classées par rubrique : finance et marchés, intelligence artificielle,
 technologie et infrastructure TI, Québec/Canada.
 
-- **Résumé du jour** : 5 à 7 points clés, toutes rubriques confondues.
+- **Résumé du jour** : 5 à 7 points clés illustrés, toutes rubriques confondues.
 - **Bandeau de marché** : actions canadiennes (FNB EWC), S&P 500, Nasdaq, CAD/USD, taux de la Banque du Canada et de la Fed.
 - **Par article** : un résumé de 2-3 phrases, le nom de la source, le lien vers l'original et,
-  quand le flux en propose une, une image d'illustration.
+  quand la source en propose une, une image d'illustration.
 - **Archive par date** et **recherche par mot-clé**.
 - **Mode sombre**, lisible sur ordinateur comme sur cellulaire.
 
@@ -27,6 +27,7 @@ sur GitHub Pages. Il n'y a ni serveur ni base de données à maintenir.
 | `veille/config.py` | lit et valide `config.yaml` |
 | `veille/collect.py` | lit les flux RSS et Atom |
 | `veille/dedupe.py` | retire les doublons (URL et titres) |
+| `veille/images.py` | image de partage des articles sans image dans leur flux |
 | `veille/markets.py` | chiffres de marché |
 | `veille/summarize.py` | résumés par l'API Claude |
 | `veille/store.py` | lit et écrit `data/AAAA-MM-JJ.json` |
@@ -103,6 +104,7 @@ Après un changement, lancer `scripts/check_feeds.py` pour confirmer que les flu
 
 Autres réglages : `general.fenetre_heures` (âge maximal des nouvelles, 36 h),
 `general.plafond_resumes` (articles résumés par rubrique à chaque exécution, répartis entre les sources ; 80),
+`general.images_des_pages` (lecture de l'image de partage ; `true`),
 `modeles` (modèles Claude utilisés) et `marches` (symboles du bandeau).
 
 ## Déploiement sur GitHub Pages
@@ -138,10 +140,14 @@ jetons consommés est écrit dans le journal de chaque exécution.
 
 ## Respect des sources
 
-- Seuls les flux RSS/Atom publics et des API officielles sont lus ; aucune page d'article n'est téléchargée.
+- Le contenu vient uniquement des flux RSS/Atom publics et d'API officielles ; le texte des articles n'est jamais téléchargé.
+- **Une exception, pour les images** : quand un flux ne fournit pas d'image, l'en-tête de la page de l'article est lu
+  pour y trouver l'image de partage (`og:image`), celle que les sites publient pour les aperçus de liens. Garde-fous :
+  `robots.txt` est respecté (illisible = site laissé de côté), seul l'en-tête est lu, un refus n'est ni contourné ni
+  retenté, et chaque page n'est demandée qu'une fois. Pour désactiver : `general.images_des_pages: false`.
 - Claude reçoit uniquement le titre et l'extrait fournis par le flux.
 - Chaque article affiche le nom de sa source et un lien vers l'original.
-- Les images sont celles que les flux proposent eux-mêmes. Seule leur adresse est enregistrée : elles restent
+- Les images sont celles que les sources proposent elles-mêmes (flux ou image de partage). Seule leur adresse est enregistrée : elles restent
   hébergées par la source, ne sont jamais copiées dans le dépôt, et mènent à l'article d'origine.
 - Une source qui bloque les lecteurs automatisés n'est pas contournée : elle est retirée de la configuration.
 
@@ -153,7 +159,8 @@ jetons consommés est écrit dans le journal de chaque exécution.
 - **Pas d'indice TSX** : aucune source gratuite ne le fournit chaque jour. La case « Canada (EWC) » montre le
   prix d'un FNB d'actions canadiennes coté à New York, en dollars américains ; sa variation inclut l'effet du taux de change.
 - **Recherche** : un résultat correspond à une édition ; au plus trois articles correspondants y sont listés.
-- **Articles sans image** : environ un tiers des sources (Banque du Canada, Fed, Statistique Canada, Le Devoir,
-  CNBC, OpenAI, AWS…) ne mettent pas d'image dans leur flux ; leurs articles s'affichent sans vignette.
+- **Articles sans image** : quelques sources n'offrent d'image ni dans leur flux ni sur leur page, ou refusent les
+  lecteurs automatisés (OpenAI) ; leurs articles s'affichent sans vignette. Certains sites institutionnels donnent
+  leur logo comme image de partage.
 - **Sources sans flux** : Anthropic et Meta AI n'offrent pas de flux RSS officiel ; leurs annonces
   arrivent par les médias spécialisés de la rubrique.

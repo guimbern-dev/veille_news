@@ -53,6 +53,7 @@ class Config:
     model_digest: str
     markets: tuple[MarketSymbol, ...]
     sections: tuple[Section, ...]
+    page_images: bool = True   # lire l'image de partage des articles sans image dans leur flux
 
     def source_order(self) -> list[str]:
         """Noms des sources dans l'ordre du fichier : c'est la priorité au dédoublonnage."""
@@ -138,6 +139,7 @@ def load_config(path: Path) -> Config:
         timezone=str(general.get("fuseau", "America/Toronto")),
         window_hours=int(general.get("fenetre_heures", 36)),
         summary_cap=int(general.get("plafond_resumes", 40)),
+        page_images=bool(general.get("images_des_pages", True)),
         model_articles=str(_require(models, "articles", "modeles")),
         model_digest=str(_require(models, "resume_du_jour", "modeles")),
         markets=_parse_markets(raw.get("marches")),

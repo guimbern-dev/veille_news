@@ -6,7 +6,7 @@
 {% if a.image %}
         {# Image du flux, servie par la source elle-même. Décorative : le titre porte déjà le lien. #}
         <a class="vignette" href="{{ a.url }}" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
-          <img src="{{ a.image }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.remove()">
+          <img src="{{ a.image }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="vignetteErreur(this)">
         </a>
 {% endif %}
         <div class="texte">
@@ -67,7 +67,13 @@
       <h2 id="titre-resume">Résumé du jour</h2>
       <ul>
 {% for point in view.digest %}
-        <li>
+        <li{% if point.image %} class="illustre"{% endif %}>
+{% if point.image %}
+          <a class="vignette" href="#a-{{ point.image_id }}" tabindex="-1" aria-hidden="true">
+            <img src="{{ point.image }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="vignetteErreur(this)">
+          </a>
+{% endif %}
+          <div class="texte">
           {{ point.text }}
 {% if point.section %}
           <span class="etiquette">{{ point.section }}</span>
@@ -77,6 +83,7 @@
             <a href="#a-{{ id }}" aria-label="Voir l’article {{ loop.index }}">{{ loop.index }}</a>
 {% endfor %}
           </span>
+          </div>
         </li>
 {% endfor %}
       </ul>

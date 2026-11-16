@@ -5,6 +5,9 @@ general:
   fuseau: America/Toronto   # fuseau qui détermine la date de l'édition
   fenetre_heures: 36        # on garde les nouvelles publiées dans cette fenêtre
   plafond_resumes: 80       # articles résumés par rubrique à chaque exécution, répartis entre les sources
+  # Pour un article sans image dans son flux, lire l'image de partage (og:image) dans l'en-tête de sa page,
+  # en respectant robots.txt. Mettre false pour ne télécharger aucune page d'article.
+  images_des_pages: true
 
 modeles:
   articles: claude-haiku-5-5         # résumé de chaque article

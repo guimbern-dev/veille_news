@@ -199,7 +199,7 @@ def test_all_internal_links_are_relative_and_resolve(site):
             if target.startswith(("http://", "https://", "#", "mailto:")) or "pagefind/" in target:
                 continue
             assert not target.startswith("/"), f"{page.name} : lien absolu {target}"
-            assert (page.parent / target.split("#")[0]).exists(), f"{page.name} : lien cassé {target}"
+            assert (page.parent / target.split("#")[0].split("?")[0]).exists(), f"{page.name} : lien cassé {target}"
 
 
 def test_failed_sources_footer(site):
@@ -285,3 +285,32 @@ def test_article_image_is_shown_lazily_and_links_to_the_source(tmp_path):
 
 def test_article_without_image_has_no_img_tag(tmp_path):
     assert "<img" not in build_with(tmp_path, art("i2", "ia", "Sans image"))
+
+
+# --- Image de chaque point du Résumé du jour ---
+
+def digest_html(tmp_path, articles, digest):
+    save_day(DayData(day=date(2026, 11, 13), generated_at=GENERATED, markets=[], articles=articles,
+                     digest=digest, failed_sources=[]), tmp_path / "data")
+    build_site(tmp_path / "data", tmp_path / "site", CONFIG, search=False)
+    page = (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
+    return re.search(r'<section class="resume-du-jour".*?</section>', page, flags=re.S).group(0)
+
+
+def test_digest_point_shows_the_image_of_its_first_illustrated_article(tmp_path):
+    articles = [art("d1", "ia", "Sans image"), art("d2", "ia", "Avec image", image="https://img.test/deux.jpg"),
+                art("d3", "ia", "Autre image", image="https://img.test/trois.jpg")]
+    html = digest_html(tmp_path, articles, [DigestPoint("Point illustré", "ia", ["d1", "d2", "d3"])])
+    assert re.findall(r'<img[^>]*src="([^"]+)"', html) == ["https://img.test/deux.jpg"]
+    assert re.search(r'<a class="vignette" href="#a-d2"', html)
+    assert 'loading="lazy"' in html and 'referrerpolicy="no-referrer"' in html
+
+
+def test_digest_point_without_any_image_has_no_img(tmp_path):
+    html = digest_html(tmp_path, [art("d1", "ia", "Sans image")], [DigestPoint("Point nu", "ia", ["d1"])])
+    assert "<img" not in html and "Point nu" in html
+
+
+def test_static_files_carry_a_fingerprint_against_stale_caches(site):
+    assert re.search(r'href="static/style\.css\?v=[0-9a-f]{8}"', html_of(site / "index.html"))
+    assert re.search(r'href="\.\./static/style\.css\?v=[0-9a-f]{8}"', html_of(site / "jour" / "2026-11-13.html"))

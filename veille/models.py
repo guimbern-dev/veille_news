@@ -18,7 +18,8 @@ class Article:
     summary: str | None = None   # résumé français produit par Claude
     importance: int | None = None  # 1 (anecdotique) à 5 (majeure)
     also_covered_by: list[dict] = field(default_factory=list)  # [{"name": …, "url": …}]
-    image: str | None = None     # adresse https de l'image fournie par le flux ; jamais copiée
+    image: str | None = None     # adresse https de l'image (flux ou page de l'article) ; jamais copiée
+    image_tried: bool = False    # l'image de partage de la page a déjà été cherchée
 
 
 @dataclass

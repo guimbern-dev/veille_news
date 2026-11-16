@@ -209,3 +209,21 @@ def test_rerun_fills_in_missing_images(tmp_path):
         return feed(THREE).replace(b"</item>", b'<enclosure url="https://img.test/x.jpg" type="image/jpeg" length="1"/></item>')
     again = run_pipeline(CFG, tmp_path / "data", tmp_path / "site", NOW + timedelta(hours=1), with_images, None, {}, search=False)
     assert [a.image for a in again.articles] == ["https://img.test/x.jpg"] * 3
+
+
+# --- Image de partage : lue seulement si une fonction de lecture est fournie ---
+
+def test_pipeline_reads_share_images_for_articles_without_one(tmp_path):
+    pages = []
+    def page_fetch(url):
+        pages.append(url)
+        return b'<html><head><meta property="og:image" content="https://img.test/og.jpg"></head></html>'
+    data = run(tmp_path, client=None, page_fetch=page_fetch, robots_fetch=lambda url: "")
+    assert len(pages) == 3 and all(a.image == "https://img.test/og.jpg" for a in data.articles)
+    again = run(tmp_path, now=NOW + timedelta(hours=1), client=None, page_fetch=page_fetch, robots_fetch=lambda url: "")
+    assert len(pages) == 3 and len(again.articles) == 3        # rien n'est relu à la relance
+
+
+def test_pipeline_reads_no_page_by_default(tmp_path):
+    data = run(tmp_path, client=None)
+    assert all(a.image is None and not a.image_tried for a in data.articles)

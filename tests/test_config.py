@@ -101,3 +101,13 @@ def test_real_config_loads():
         "Finance et marchés", "Intelligence artificielle",
         "Technologie et infrastructure TI", "Québec/Canada"]
     assert all(s.sources for s in cfg.sections)
+
+
+# --- Lecture des images de partage : activable dans la configuration ---
+
+def test_page_images_default_on_and_can_be_turned_off(tmp_path):
+    base = "modeles: {articles: a, resume_du_jour: b}\nrubriques:\n  - nom: IA\n    sources: [{nom: S, url: \"https://s.test/rss\"}]\n"
+    on = tmp_path / "on.yaml"; on.write_text(base, encoding="utf-8")
+    off = tmp_path / "off.yaml"; off.write_text("general: {images_des_pages: false}\n" + base, encoding="utf-8")
+    from veille.config import load_config
+    assert load_config(on).page_images is True and load_config(off).page_images is False

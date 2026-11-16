@@ -105,8 +105,12 @@ h2 {
   padding: 16px 18px 8px; margin: 0 0 30px;
 }
 .resume-du-jour h2 { border: 0; padding: 0; margin-bottom: 8px; color: var(--accent); }
-.resume-du-jour ul { margin: 0; padding-left: 1.15rem; }
-.resume-du-jour li { margin: 0 0 10px; }
+.resume-du-jour ul { margin: 0; padding: 0; list-style: none; }
+.resume-du-jour li { margin: 0 0 14px; display: flex; gap: 12px; align-items: flex-start; }
+.resume-du-jour .texte { flex: 1 1 auto; min-width: 0; }
+.resume-du-jour .vignette { order: 0; flex: 0 0 6rem; }
+/* Un point sans image garde l'alignement du texte des autres */
+.resume-du-jour li:not(.illustre)::before { content: ""; flex: 0 0 6rem; aspect-ratio: 3 / 2; border-radius: 6px; background: var(--marque); }
 .etiquette {
   display: inline-block; font-size: .72rem; color: var(--discret); background: var(--marque);
   border-radius: 4px; padding: 1px 6px; margin-left: 4px; white-space: nowrap; vertical-align: 1px;
@@ -173,4 +177,5 @@ h2 {
   .entete nav { gap: 10px; }
   .article.illustre { gap: 10px; }
   .vignette { flex-basis: 5.5rem; }
+  .resume-du-jour .vignette, .resume-du-jour li:not(.illustre)::before { flex-basis: 4.5rem; }
 }
