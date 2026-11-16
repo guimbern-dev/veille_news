@@ -16,6 +16,26 @@
 {% elif a.excerpt %}
         <p class="resume extrait"><span class="mention">Extrait de la source</span> {{ a.excerpt }}</p>
 {% endif %}
+{% if a.sources %}
+        <div class="sources">
+          <p class="provenance"><span class="source">{{ a.sources | length }} sources</span>{% if a.when %} · {{ a.when }}{% endif %}</p>
+          <ul>
+{% for s in a.sources[:4] %}
+            <li><a href="{{ s.url }}" rel="noopener noreferrer">{{ s.name }}</a>{% if s.title %} — {{ s.title }}{% endif %}</li>
+{% endfor %}
+          </ul>
+{% if a.sources | length > 4 %}
+          <details>
+            <summary>{{ a.sources | length - 4 }} autre{{ 's' if a.sources | length > 5 }} source{{ 's' if a.sources | length > 5 }}</summary>
+            <ul>
+{% for s in a.sources[4:] %}
+              <li><a href="{{ s.url }}" rel="noopener noreferrer">{{ s.name }}</a>{% if s.title %} — {{ s.title }}{% endif %}</li>
+{% endfor %}
+            </ul>
+          </details>
+{% endif %}
+        </div>
+{% else %}
         <p class="provenance">
           <span class="source">{{ a.source }}</span>{% if a.when %} · {{ a.when }}{% endif %}
 {% if a.also %}
@@ -25,6 +45,7 @@
 {% endfor %}
 {% endif %}
         </p>
+{% endif %}
         </div>
       </article>
 {% endmacro %}

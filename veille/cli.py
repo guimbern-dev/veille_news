@@ -16,6 +16,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from .build import build_site
+from .cluster import group_articles
 from .collect import Fetch, collect, http_fetch
 from .config import Config, ConfigError, load_config
 from .dedupe import dedupe
@@ -107,6 +108,7 @@ def run_pipeline(config: Config, data_dir: Path, out_dir: Path, now: datetime, f
             log.error("Aucun des %d articles en attente n'a pu être résumé : voir les avertissements ci-dessus", len(waiting))
             print("::warning title=Veille quotidienne::Aucun résumé produit par l'API Claude ; "
                   "la page affiche les extraits des sources. Voir le journal de l'exécution.", flush=True)
+        articles = group_articles(articles, client, config.model_digest, usage=usage)
         digest = daily_digest(articles, config.sections, client, config.model_digest, usage=usage) or previous_digest
         log.info("Résumés : %d articles résumés, %d sans résumé, résumé du jour %s ; %d jetons en entrée, %d en sortie",
                  sum(1 for a in articles if a.summary), sum(1 for a in articles if not a.summary),

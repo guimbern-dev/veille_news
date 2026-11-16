@@ -5,7 +5,10 @@ en français et classées par rubrique : finance et marchés, intelligence artif
 technologie et infrastructure TI, Québec/Canada.
 
 - **Résumé du jour** : 5 à 7 points clés illustrés, toutes rubriques confondues.
-- **Bandeau de marché** : actions canadiennes (FNB EWC), S&P 500, Nasdaq, CAD/USD, taux de la Banque du Canada et de la Fed.
+- **Bandeau de marché** : actions canadiennes (FNB EWC), S&P 500, Nasdaq, CAD/USD, taux de la Banque du Canada et de la Fed ;
+  sur une deuxième ligne, des FNB au choix (XEQT) et le Bitcoin.
+- **Sujets regroupés** : les nouvelles de plusieurs sources sur un même sujet forment une seule carte, avec un
+  résumé de synthèse et un lien vers chaque article d'origine.
 - **Par article** : un résumé de 2-3 phrases, le nom de la source, le lien vers l'original et,
   quand la source en propose une, une image d'illustration.
 - **Archive par date** et **recherche par mot-clé**.
@@ -30,6 +33,7 @@ sur GitHub Pages. Il n'y a ni serveur ni base de données à maintenir.
 | `veille/images.py` | image de partage des articles sans image dans leur flux |
 | `veille/markets.py` | chiffres de marché |
 | `veille/summarize.py` | résumés par l'API Claude |
+| `veille/cluster.py` | regroupement des nouvelles d'un même sujet (API Claude) |
 | `veille/store.py` | lit et écrit `data/AAAA-MM-JJ.json` |
 | `veille/build.py` | génère le site à partir de `templates/` et `static/` |
 | `veille/cli.py` | commande `python -m veille` |
@@ -133,8 +137,8 @@ Le site est public, mais il demande aux moteurs de recherche de ne pas l'indexer
 | Poste | Coût mensuel |
 |---|---|
 | GitHub Actions et Pages (dépôt public) | 0 $ |
-| API de marché (Valet, FRED, Twelve Data) | 0 $ |
-| API Claude : Haiku 5.5 pour les articles, Sonnet 5.5 pour le résumé du jour | environ 2 à 3 $ US |
+| API de marché (Valet, FRED, Twelve Data, Alpha Vantage) | 0 $ |
+| API Claude : Haiku 5.5 pour les articles, Sonnet 5.5 pour le regroupement par sujet et le résumé du jour | de l'ordre de 5 à 8 $ US (estimation, à vérifier dans la console Anthropic) |
 
 Le coût de Claude dépend du volume. Le plafond `plafond_resumes` le borne ; le nombre de
 jetons consommés est écrit dans le journal de chaque exécution.
@@ -154,7 +158,9 @@ jetons consommés est écrit dans le journal de chaque exécution.
 
 ## Limites connues
 
-- **Doublons entre langues** : une même nouvelle couverte en français et en anglais n'est pas fusionnée.
+- **Regroupement par sujet** : fait par Claude à partir des résumés. Il peut à l'occasion réunir deux nouvelles voisines
+  ou en laisser une à part ; chaque article d'origine reste listé et lié sous la carte.
+- **FNB canadiens** : Alpha Vantage limite la clé gratuite à 25 requêtes par jour, soit une par FNB et par exécution.
 - **Résumés à partir de l'extrait** : si le flux ne donne qu'un titre, le résumé est court.
 - **Marchés** : le bandeau montre la dernière clôture connue, pas des données en direct.
 - **Pas d'indice TSX** : aucune source gratuite ne le fournit chaque jour. La case « Canada (EWC) » montre le

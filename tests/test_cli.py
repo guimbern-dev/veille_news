@@ -49,7 +49,9 @@ class FakeClient:
             self.calls.append(kwargs)
         if self.broken:
             raise RuntimeError("API en panne")
-        if kwargs["model"] == "m-digest":
+        if "groupes" in json.dumps(kwargs["output_config"]):      # regroupement par sujet : aucun groupe
+            body = {"groupes": []}
+        elif kwargs["model"] == "m-digest":
             import re
             ids = re.findall(r"\[(\w{12})\]", kwargs["messages"][0]["content"])
             body = {"points": [{"texte": f"Point {i}", "rubrique": "ia", "articles": [x]} for i, x in enumerate(ids[:3])]}
@@ -59,7 +61,11 @@ class FakeClient:
                                usage=SimpleNamespace(input_tokens=10, output_tokens=5))
 
     def count(self, model: str) -> int:
-        return sum(1 for c in self.calls if c["model"] == model)
+        """Appels par modèle ; « groupes » compte à part les appels de regroupement."""
+        grouping = lambda c: "groupes" in json.dumps(c["output_config"])
+        if model == "groupes":
+            return sum(1 for c in self.calls if grouping(c))
+        return sum(1 for c in self.calls if c["model"] == model and not grouping(c))
 
 
 def run(tmp_path, now=NOW, titles=THREE, client=None, **kw):
@@ -84,6 +90,7 @@ def test_rerun_same_day_does_not_duplicate_or_resummarize(tmp_path):
     again = run(tmp_path, now=NOW + timedelta(hours=1), client=client)
     assert len(again.articles) == len({a.id for a in again.articles}) == 3
     assert client.count("m-articles") == 3 and client.count("m-digest") == 2   # seul le résumé du jour est refait
+    assert client.count("groupes") == 1                                        # rien de nouveau à regrouper
 
 
 def test_rerun_adds_only_the_new_articles(tmp_path):

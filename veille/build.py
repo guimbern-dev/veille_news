@@ -93,25 +93,46 @@ def format_quote(quote: MarketQuote) -> dict:
 
 # --- Préparation d'une édition pour les gabarits ------------------------------------
 
-def _article_view(article: Article, now: datetime) -> dict:
+def _article_view(article: Article, now: datetime, members: list[Article] = ()) -> dict:
     excerpt = article.excerpt
     if len(excerpt) > EXCERPT_LIMIT:
         excerpt = excerpt[:EXCERPT_LIMIT].rsplit(" ", 1)[0].rstrip(" ,;:.") + "…"
-    return {"id": article.id, "title": article.title, "url": article.url, "source": article.source,
+    view = {"id": article.id, "title": article.title, "url": article.url, "source": article.source,
             "summary": article.summary, "excerpt": excerpt, "importance": article.importance or 0,
             "when": relative_time(article.published, now), "also": article.also_covered_by,
-            "image": article.image}
+            "image": article.image, "sources": []}
+    if members and article.group_title:
+        # Sujet regroupé : titre et résumé de synthèse, puis chaque article d'origine avec son lien.
+        view["title"], view["summary"] = article.group_title, article.group_summary or article.summary
+        seen, sources = set(), []
+        for a in [article, *members]:
+            entries = [{"name": a.source, "url": a.url, "title": a.title}]
+            entries += [{"name": o.get("name", ""), "url": o.get("url", ""), "title": ""} for o in a.also_covered_by]
+            for entry in entries:
+                if entry["url"] and entry["url"] not in seen:
+                    seen.add(entry["url"])
+                    sources.append(entry)
+        view["sources"], view["also"] = sources, []
+    return view
 
 
 def day_view(data: DayData, config: Config) -> dict:
     """Transforme une édition en dictionnaire prêt à afficher."""
     oldest = datetime.min.replace(tzinfo=timezone.utc)
     sections, shown_ids = [], set()
+    # Articles regroupés sous un meneur : ils n'ont pas de carte, leur source est citée sous la sienne.
+    known = {a.id for a in data.articles}
+    members: dict[str, list[Article]] = {}
+    lead_of: dict[str, str] = {}
+    for a in data.articles:
+        if a.merged_into in known:
+            members.setdefault(a.merged_into, []).append(a)
+            lead_of[a.id] = a.merged_into
     for section in config.sections:
-        articles = [a for a in data.articles if a.section == section.slug]
-        # Les plus importants d'abord ; à importance égale, les plus récents.
-        articles.sort(key=lambda a: (a.importance or 0, a.published or oldest), reverse=True)
-        views = [_article_view(a, data.generated_at) for a in articles]
+        articles = [a for a in data.articles if a.section == section.slug and a.id not in lead_of]
+        # Les plus importants d'abord ; à importance égale, les sujets les plus couverts, puis les plus récents.
+        articles.sort(key=lambda a: (a.importance or 0, len(members.get(a.id, ())), a.published or oldest), reverse=True)
+        views = [_article_view(a, data.generated_at, members.get(a.id, ())) for a in articles]
         shown_ids.update(a.id for a in articles)
         sections.append({"name": section.name, "slug": section.slug,
                          "visible": views[: section.max_articles],
@@ -123,7 +144,8 @@ def day_view(data: DayData, config: Config) -> dict:
     if data.digest:
         digest = []
         for point in data.digest:
-            ids = [i for i in point.article_ids if i in shown_ids]
+            ids = list(dict.fromkeys(lead_of.get(i, i) for i in point.article_ids))  # un membre renvoie à son groupe
+            ids = [i for i in ids if i in shown_ids]
             if ids:  # un point dont aucun article n'est affiché n'a plus de source à citer
                 # Le point est illustré par son premier article qui a une image.
                 illustrated = next((i for i in ids if i in images), None)

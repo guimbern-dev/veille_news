@@ -58,8 +58,8 @@ DIGEST_SYSTEM = """\
 Tu rédiges le « Résumé du jour » d'un tableau de bord de veille personnel, lu chaque matin par \
 un programmeur-analyste en infrastructure TI au Québec, qui suit aussi la finance et l'IA.
 
-On te donne les articles du jour, déjà résumés, avec leur identifiant, leur rubrique et leur \
-note d'importance. Dégage les 5 à 7 points les plus importants de la journée, toutes rubriques \
+On te donne les articles du jour, déjà résumés, avec leur identifiant, leur rubrique, leur \
+note d'importance et le nombre de sources qui couvrent le sujet. Dégage les 5 à 7 points les plus importants de la journée, toutes rubriques \
 confondues, en regroupant dans un même point les articles qui traitent du même sujet.
 
 Pour chaque point :
@@ -190,8 +190,13 @@ def daily_digest(articles: list[Article], sections: tuple[Section, ...], client,
                  usage: dict | None = None) -> list[DigestPoint] | None:
     """Les 5 à 7 points clés du jour, ou None si on ne peut pas en produire de fiables."""
     names = {s.slug: s.name for s in sections}
-    candidates = [a for a in articles
-                  if a.summary and (a.importance or 0) >= DIGEST_MIN_IMPORTANCE and a.section in names]
+    # Un article regroupé sous un autre est représenté par son meneur, avec le texte de synthèse.
+    candidates = [a for a in articles if a.summary and a.merged_into is None
+                  and (a.importance or 0) >= DIGEST_MIN_IMPORTANCE and a.section in names]
+    sources = {a.id: 1 for a in candidates}
+    for a in articles:
+        if a.merged_into in sources:
+            sources[a.merged_into] += 1
     if len(candidates) < DIGEST_MIN_POINTS:
         return None
 
@@ -200,8 +205,8 @@ def daily_digest(articles: list[Article], sections: tuple[Section, ...], client,
     lines += [f"- {slug} : {name}" for slug, name in names.items()]
     lines.append("\nArticles du jour :")
     for a in candidates:
-        lines.append(f"\n[{a.id}] rubrique={a.section} importance={a.importance} source={a.source}\n"
-                     f"Titre : {a.title}\nRésumé : {a.summary}")
+        lines.append(f"\n[{a.id}] rubrique={a.section} importance={a.importance} sources={sources[a.id]}\n"
+                     f"Titre : {a.group_title or a.title}\nRésumé : {a.group_summary or a.summary}")
     for attempt in range(1, DIGEST_ATTEMPTS + 1):
         try:
             data = _ask(client, model, DIGEST_SYSTEM, "\n".join(lines), DIGEST_SCHEMA,

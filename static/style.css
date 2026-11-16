@@ -145,6 +145,12 @@ h2 {
 .provenance { margin: 0; font-size: .84rem; color: var(--discret); }
 .provenance a { color: var(--discret); }
 .source { font-weight: 600; }
+/* Sujet regroupé : la liste des articles d'origine, un par source */
+.sources ul { list-style: none; margin: 3px 0 0; padding: 0; font-size: .84rem; color: var(--discret); }
+.sources li { margin: 0 0 2px; padding-left: .9rem; text-indent: -.9rem; overflow-wrap: anywhere; }
+.sources li::before { content: "› "; }
+.sources a { font-weight: 600; }
+.sources summary { cursor: pointer; color: var(--accent); font-size: .84rem; margin: 2px 0; }
 .vide { color: var(--discret); font-style: italic; }
 
 .plus summary { cursor: pointer; color: var(--accent); font-size: .92rem; margin: 0 0 16px 12px; }

@@ -330,3 +330,36 @@ def test_markets_are_shown_on_two_rows_and_crypto_does_not_set_the_close(tmp_pat
     assert "65 351" in unescape(rows[1]) and "65 351,05" not in unescape(rows[1])   # sans décimales
     assert "Clôture du 12 novembre" in page                 # le Bitcoin, coté 7 jours sur 7, ne fixe pas la clôture
     assert 'class="date"' not in rows[1]                     # et ne porte pas de date d'écart
+
+
+# --- Articles regroupés ---
+
+def test_grouped_articles_show_one_card_with_every_source(tmp_path):
+    lead = art("g1", "ia", "Titre original du meneur", group_title="Titre du sujet", group_summary="Synthèse du sujet.")
+    m1 = Article(id="g2", title="Angle de La Presse", url="https://lapresse.test/x", source="La Presse", section="quebec",
+                 published=GENERATED, excerpt="", summary="R.", importance=3, merged_into="g1")
+    m2 = Article(id="g3", title="CNBC angle", url="https://cnbc.test/y", source="CNBC", section="finance",
+                 published=GENERATED, excerpt="", summary="R.", importance=3, merged_into="g1")
+    solo = art("s1", "ia", "Article seul")
+    html = digest_html(tmp_path, [lead, m1, m2, solo], [DigestPoint("Point", "ia", ["g2"])])
+    page = (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
+    assert page.count('<article class="article') == 2                      # le groupe et l'article seul
+    card = re.search(r'<article[^>]*id="a-g1".*?</article>', page, flags=re.S).group(0)
+    assert "Titre du sujet" in card and "Synthèse du sujet." in card and "Titre original du meneur" in card
+    assert "3 sources" in card
+    assert re.findall(r'href="(https://[^"]+)"', card.split('class="sources"')[1]) == [
+        "https://source.test/g1", "https://lapresse.test/x", "https://cnbc.test/y"]
+    assert "La Presse" in card and "CNBC" in card
+    assert 'id="a-g2"' not in page and "Angle de La Presse" in card        # le titre du membre reste lisible
+    assert 'href="#a-g1"' in html                                          # un renvoi vers un membre mène au groupe
+
+
+def test_long_source_lists_are_folded_after_the_first_four(tmp_path):
+    lead = art("g1", "ia", "Meneur", group_title="Sujet", group_summary="Synthèse.")
+    members = [Article(id=f"m{i}", title=f"Angle {i}", url=f"https://m.test/{i}", source=f"Média {i}", section="ia",
+                       published=GENERATED, excerpt="", summary="R.", importance=3, merged_into="g1") for i in range(6)]
+    build_with(tmp_path, lead, *members)
+    card = re.search(r'<article[^>]*id="a-g1".*?</article>', (tmp_path / "site" / "index.html").read_text(encoding="utf-8"), flags=re.S).group(0)
+    shown, folded = card.split("<details")
+    assert "7 sources" in shown and shown.count("<li>") == 4 and folded.count("<li>") == 3
+    assert "3 autres sources" in folded

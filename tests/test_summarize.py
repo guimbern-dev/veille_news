@@ -226,3 +226,16 @@ def test_digest_prompt_asks_for_short_points():
     client = FakeClient({}, default=digest_reply(("Un", "ia", ["a1"]), ("Deux", "ia", ["a2"]), ("Trois", "finance", ["f1"])))
     daily_digest(summarized(), SECTIONS, client, "m")
     assert "40 mots" in client.sent_text() and "4 identifiants" in client.sent_text()
+
+
+# --- Résumé du jour : articles regroupés ---
+
+def test_digest_uses_group_text_and_skips_merged_articles():
+    arts = [art("g1", summary="Résumé du meneur.", importance=4, group_title="Titre du groupe", group_summary="Résumé du groupe."),
+            art("g2", summary="Membre fusionné.", importance=4, merged_into="g1"),
+            art("x1", summary="Autre.", importance=4), art("x2", summary="Encore.", importance=4)]
+    client = FakeClient({}, default=digest_reply(("Un", "ia", ["g1"]), ("Deux", "ia", ["x1"]), ("Trois", "ia", ["x2"])))
+    daily_digest(arts, SECTIONS, client, "m")
+    sent = client.sent_text()
+    assert "Titre du groupe" in sent and "Résumé du groupe." in sent and "sources=2" in sent
+    assert "[g2]" not in sent and "Membre fusionné." not in sent

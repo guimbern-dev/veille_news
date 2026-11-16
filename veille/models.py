@@ -20,6 +20,10 @@ class Article:
     also_covered_by: list[dict] = field(default_factory=list)  # [{"name": …, "url": …}]
     image: str | None = None     # adresse https de l'image (flux ou page de l'article) ; jamais copiée
     image_tried: bool = False    # l'image de partage de la page a déjà été cherchée
+    merged_into: str | None = None    # identifiant du meneur quand l'article est regroupé sous un autre
+    group_title: str | None = None    # titre de synthèse (meneur d'un groupe seulement)
+    group_summary: str | None = None  # résumé de synthèse (meneur d'un groupe seulement)
+    grouped: bool = False             # déjà soumis au regroupement par sujet
 
 
 @dataclass
