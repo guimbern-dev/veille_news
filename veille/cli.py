@@ -80,7 +80,9 @@ def run_pipeline(config: Config, data_dir: Path, out_dir: Path, now: datetime, f
         log.error("Aucune nouvelle collectée : rien n'est écrit, le site en ligne reste inchangé")
         raise SystemExit(1)
 
-    digest = None
+    # Relance : si le résumé du jour ne peut pas être refait, celui déjà produit est conservé.
+    previous_digest = existing.digest if existing else None
+    digest = previous_digest
     if client is None:
         log.warning("Résumés sautés : pas de client pour l'API Claude (clé absente ou --sans-resumes)")
     else:
@@ -94,7 +96,7 @@ def run_pipeline(config: Config, data_dir: Path, out_dir: Path, now: datetime, f
             log.error("Aucun des %d articles en attente n'a pu être résumé : voir les avertissements ci-dessus", len(waiting))
             print("::warning title=Veille quotidienne::Aucun résumé produit par l'API Claude ; "
                   "la page affiche les extraits des sources. Voir le journal de l'exécution.", flush=True)
-        digest = daily_digest(articles, config.sections, client, config.model_digest, usage=usage)
+        digest = daily_digest(articles, config.sections, client, config.model_digest, usage=usage) or previous_digest
         log.info("Résumés : %d articles résumés, %d sans résumé, résumé du jour %s ; %d jetons en entrée, %d en sortie",
                  sum(1 for a in articles if a.summary), sum(1 for a in articles if not a.summary),
                  "produit" if digest else "absent", usage.get("input_tokens", 0), usage.get("output_tokens", 0))

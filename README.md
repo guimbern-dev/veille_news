@@ -5,7 +5,7 @@ en français et classées par rubrique : finance et marchés, intelligence artif
 technologie et infrastructure TI, Québec/Canada.
 
 - **Résumé du jour** : 5 à 7 points clés, toutes rubriques confondues.
-- **Bandeau de marché** : TSX, S&P 500, Nasdaq, CAD/USD, taux de la Banque du Canada et de la Fed.
+- **Bandeau de marché** : actions canadiennes (FNB EWC), S&P 500, Nasdaq, CAD/USD, taux de la Banque du Canada et de la Fed.
 - **Par article** : un résumé de 2-3 phrases, le nom de la source et le lien vers l'original.
 - **Archive par date** et **recherche par mot-clé**.
 - **Mode sombre**, lisible sur ordinateur comme sur cellulaire.
@@ -49,7 +49,7 @@ dans le code ni dans le dépôt.**
 |---|---|---|---|
 | `ANTHROPIC_API_KEY` | résumés | <https://platform.claude.com/> | à l'usage (voir plus bas) |
 | `FRED_API_KEY` | S&P 500, Nasdaq, taux de la Fed | <https://fred.stlouisfed.org/docs/api/api_key.html> | gratuit |
-| `TWELVEDATA_API_KEY` | TSX | <https://twelvedata.com/> | gratuit |
+| `TWELVEDATA_API_KEY` | actions canadiennes (FNB EWC) | <https://twelvedata.com/> | gratuit |
 
 Aucune clé n'est obligatoire. Sans `ANTHROPIC_API_KEY`, les articles affichent l'extrait
 de la source au lieu d'un résumé ; sans clé de marché, la case correspondante affiche « n. d. ».
@@ -147,6 +147,8 @@ jetons consommés est écrit dans le journal de chaque exécution.
 - **Doublons entre langues** : une même nouvelle couverte en français et en anglais n'est pas fusionnée.
 - **Résumés à partir de l'extrait** : si le flux ne donne qu'un titre, le résumé est court.
 - **Marchés** : le bandeau montre la dernière clôture connue, pas des données en direct.
+- **Pas d'indice TSX** : aucune source gratuite ne le fournit chaque jour. La case « Canada (EWC) » montre le
+  prix d'un FNB d'actions canadiennes coté à New York, en dollars américains ; sa variation inclut l'effet du taux de change.
 - **Recherche** : un résultat correspond à une édition ; au plus trois articles correspondants y sont listés.
 - **Sources sans flux** : Anthropic et Meta AI n'offrent pas de flux RSS officiel ; leurs annonces
   arrivent par les médias spécialisés de la rubrique.

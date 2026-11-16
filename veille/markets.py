@@ -3,7 +3,7 @@
 Fournisseurs (API officielles et gratuites) :
 - valet      : Banque du Canada, sans clé ;
 - fred       : Réserve fédérale de Saint-Louis, clé gratuite FRED_API_KEY ;
-- twelvedata : Twelve Data, clé gratuite TWELVEDATA_API_KEY (utilisé pour le TSX).
+- twelvedata : Twelve Data, clé gratuite TWELVEDATA_API_KEY (utilisé pour le FNB d'actions canadiennes EWC).
 
 Un symbole indisponible donne une cote vide, affichée « n. d. » : il ne bloque
 jamais la page.

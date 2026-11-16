@@ -185,3 +185,17 @@ def test_total_failure_of_claude_is_flagged_for_github(tmp_path, capsys):
 def test_no_flag_when_summaries_work(tmp_path, capsys):
     run(tmp_path, client=FakeClient())
     assert "::warning" not in capsys.readouterr().out
+
+
+# --- Relance : le résumé du jour déjà produit n'est pas perdu ---
+
+def test_rerun_without_claude_keeps_the_digest(tmp_path):
+    first = run(tmp_path, client=FakeClient())
+    again = run(tmp_path, now=NOW + timedelta(hours=1), client=None)
+    assert again.digest == first.digest and len(again.digest) == 3
+
+
+def test_rerun_with_failing_digest_keeps_the_previous_one(tmp_path):
+    first = run(tmp_path, client=FakeClient())
+    again = run(tmp_path, now=NOW + timedelta(hours=1), client=FakeClient(broken=True))
+    assert again.digest == first.digest

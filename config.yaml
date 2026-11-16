@@ -13,7 +13,10 @@ modeles:
 # Bandeau de chiffres. type : indice, taux ou devise.
 # fournisseur : valet (Banque du Canada), fred (clé FRED_API_KEY), twelvedata (clé TWELVEDATA_API_KEY).
 marches:
-  - {nom: "TSX", fournisseur: twelvedata, symbole: GSPTSE, type: indice}
+  # Le palier gratuit de Twelve Data ne couvre ni l'indice S&P/TSX ni la Bourse de Toronto.
+  # EWC (FNB iShares MSCI Canada, coté à New York en dollars américains) en tient lieu :
+  # sa variation inclut donc l'effet du taux de change.
+  - {nom: "Canada (EWC)", fournisseur: twelvedata, symbole: EWC, type: indice}
   - {nom: "S&P 500", fournisseur: fred, symbole: SP500, type: indice}
   - {nom: "Nasdaq", fournisseur: fred, symbole: NASDAQCOM, type: indice}
   - {nom: "CAD/USD", fournisseur: valet, symbole: FXCADUSD, type: devise}

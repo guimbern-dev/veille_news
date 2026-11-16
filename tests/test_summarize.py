@@ -195,3 +195,18 @@ def test_failure_log_carries_the_error_message(caplog):
     """I4 : une panne permanente (clé invalide, crédit épuisé) doit être lisible dans le journal."""
     summarize_articles([art("a1")], FakeClient({}, default=RuntimeError("crédit épuisé")), "m", 40)
     assert "crédit épuisé" in caplog.text
+
+
+# --- Le résumé du jour est retenté une fois ---
+
+def test_digest_is_retried_once_after_an_unusable_reply():
+    replies = [digest_reply(), digest_reply(("Un", "ia", ["a1"]), ("Deux", "ia", ["a2"]), ("Trois", "finance", ["f1"]))]
+    calls = []
+    client = SimpleNamespace(messages=SimpleNamespace(create=lambda **kw: (calls.append(kw), replies[len(calls) - 1])[1]))
+    assert len(daily_digest(summarized(), SECTIONS, client, "m")) == 3 and len(calls) == 2
+
+
+def test_digest_gives_up_after_two_attempts():
+    client = FakeClient({}, default=digest_reply())
+    assert daily_digest(summarized(), SECTIONS, client, "m") is None
+    assert len(client.calls) == 2

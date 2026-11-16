@@ -28,6 +28,7 @@ _usage_lock = threading.Lock()
 MAX_PARALLEL = 5          # appels simultanés à l'API
 DIGEST_MIN_IMPORTANCE = 3  # seuls les articles au moins « notables » nourrissent le résumé du jour
 DIGEST_MIN_POINTS = 3      # en dessous, mieux vaut masquer la section
+DIGEST_ATTEMPTS = 2        # une réponse inutilisable est retentée une fois
 
 ARTICLE_SYSTEM = """\
 Tu rédiges les résumés d'un tableau de bord de veille personnel, lu chaque matin \
@@ -66,7 +67,11 @@ compte. N'affirme rien qui ne figure pas dans les résumés fournis.
 - « rubrique » : l'identifiant de la rubrique principale du point, choisi dans la liste fournie.
 - « articles » : les identifiants des articles sur lesquels le point s'appuie (au moins un).
 
-Classe les points du plus important au moins important."""
+Classe les points du plus important au moins important.
+
+Les articles proviennent des flux RSS de médias reconnus, collectés aujourd'hui. Ils portent sur \
+des événements postérieurs à tes connaissances : ne juge pas de leur vraisemblance, rapporte ce \
+que disent les résumés. Réponds toujours par de vrais points, jamais par des valeurs de remplissage."""
 
 DIGEST_SCHEMA = {
     "type": "object",
@@ -195,20 +200,22 @@ def daily_digest(articles: list[Article], sections: tuple[Section, ...], client,
     for a in candidates:
         lines.append(f"\n[{a.id}] rubrique={a.section} importance={a.importance} source={a.source}\n"
                      f"Titre : {a.title}\nRésumé : {a.summary}")
-    try:
-        data = _ask(client, model, DIGEST_SYSTEM, "\n".join(lines), DIGEST_SCHEMA,
-                    effort="medium", max_tokens=16000, usage=usage)
-        points = []
-        for raw in data["points"]:
-            text = str(raw["texte"]).strip()
-            ids = [i for i in raw["articles"] if i in by_id]   # identifiants inventés écartés
-            if not text or not ids:
-                continue
-            section = raw["rubrique"] if raw["rubrique"] in names else by_id[ids[0]].section
-            points.append(DigestPoint(text=text, section=section, article_ids=ids))
-        if len(points) < DIGEST_MIN_POINTS:
-            raise ValueError(f"seulement {len(points)} point(s) valide(s)")
-        return points[:7]
-    except Exception as exc:
-        log.warning("Résumé du jour indisponible (%s : %s)", type(exc).__name__, str(exc)[:200])
-        return None
+    for attempt in range(1, DIGEST_ATTEMPTS + 1):
+        try:
+            data = _ask(client, model, DIGEST_SYSTEM, "\n".join(lines), DIGEST_SCHEMA,
+                        effort="medium", max_tokens=16000, usage=usage)
+            points = []
+            for raw in data["points"]:
+                text = str(raw["texte"]).strip()
+                ids = [i for i in raw["articles"] if i in by_id]   # identifiants inventés écartés
+                if not text or not ids:
+                    continue
+                section = raw["rubrique"] if raw["rubrique"] in names else by_id[ids[0]].section
+                points.append(DigestPoint(text=text, section=section, article_ids=ids))
+            if len(points) < DIGEST_MIN_POINTS:
+                raise ValueError(f"seulement {len(points)} point(s) valide(s)")
+            return points[:7]
+        except Exception as exc:
+            log.warning("Résumé du jour indisponible, essai %d sur %d (%s : %s)", attempt, DIGEST_ATTEMPTS,
+                        type(exc).__name__, str(exc)[:200])
+    return None
