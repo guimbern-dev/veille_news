@@ -2514,19 +2514,32 @@
       "summary": "Des dizaines de voisins se sont réunis dans un parc de Dartmouth pour accompagner Bailey, un chien de 12 ans atteint d'un cancer, lors d'une dernière sortie. La journaliste de CBC Guiliana Grillo était sur place.",
       "title": "Community comes together to say farewell to Bailey, a dog with cancer",
       "url": "https://www.cbc.ca/player/play/9.7423030?cmp=rss"
+    },
+    {
+      "also_covered_by": [],
+      "excerpt": "More than 12,400 flights were affected on Friday when the agency halted all air traffic in the U.S. for nearly five hours",
+      "id": "7129785cba39",
+      "image": "https://www.theglobeandmail.com/resizer/v2/HQKTFCNNGVEHBHTWTVADBIBQIE.jpg?auth=e5c634332ea24935a87ef7bb1f9cc62e29ce99f5e31031b29dc767fe86b2d6b2&smart=true&width=8101&height=5403",
+      "importance": 3,
+      "published": "2026-11-16T02:01:11+00:00",
+      "section": "finance-et-marches",
+      "source": "The Globe and Mail",
+      "summary": "Des voyageurs aériens canadiens subissent retards et annulations à la suite d'un arrêt de la circulation aérienne ordonné par la FAA. Selon l'extrait, plus de 12 400 vols ont été touchés vendredi, lorsque l'agence a interrompu tout le trafic aérien américain pendant près de cinq heures.",
+      "title": "Canadian air travellers grapple with delays, cancellations in aftermath of FAA ground stop",
+      "url": "https://www.theglobeandmail.com/business/article-canadian-air-travellers-delays-cancellations-faa-ground-stop/"
     }
   ],
   "day": "2026-11-15",
   "digest": [
     {
       "article_ids": [
-        "8c37dc23c16a",
-        "024802442c5a",
+        "ac2a2d7d52b3",
         "770de7745f3f",
-        "ac2a2d7d52b3"
+        "024802442c5a",
+        "8c37dc23c16a"
       ],
       "section": "finance-et-marches",
-      "text": "Washington veut savoir si Nvidia a fermé les yeux sur la contrebande de puces d'IA vers la Chine, après la démission de Jensen Huang. Le Congrès envisage de resserrer les règles d'exportation, et des investisseurs réclament le retour de Huang."
+      "text": "Nvidia traverse une crise de leadership après la démission de Jensen Huang, liée à une affaire d'espionnage présumée. Bessent exige un PDG externe, des investisseurs réclament son retour et le Congrès veut resserrer les exportations de puces IA."
     },
     {
       "article_ids": [
@@ -2534,25 +2547,17 @@
         "109e7c320ce6"
       ],
       "section": "quebec-canada",
-      "text": "Selon Zelensky, Washington proposerait à l'Ukraine des concessions territoriales en échange d'une adhésion à l'OTAN, et Moscou aurait rejeté une trêve énergétique. Cela compte pour l'issue des négociations sur la guerre."
+      "text": "Washington aurait proposé à l'Ukraine une adhésion à l'OTAN contre des concessions territoriales, selon Zelensky. Il ajoute que Moscou a rejeté une trêve énergétique lors des discussions à Abou Dhabi."
     },
     {
       "article_ids": [
         "0a25bd4b5c03",
         "7dc561692bbc",
-        "5520a656a4df",
-        "76c392ebaa8a"
+        "7129785cba39",
+        "5520a656a4df"
       ],
-      "section": "technologie-et-infrastructure-ti",
-      "text": "Un arrêt national des vols imposé par la FAA a perturbé le trafic aux États-Unis et au Canada. Le duo infrastructure vétuste et routeur défaillant est évoqué, mais la cause profonde reste inconnue; retour à la normale attendu lundi."
-    },
-    {
-      "article_ids": [
-        "205541d416be",
-        "960f41318ea9"
-      ],
-      "section": "technologie-et-infrastructure-ti",
-      "text": "Cursor confirme qu'une clé d'accès volée chez le fournisseur Fireworks AI a permis la distribution d'une extension Claude Code malveillante. L'incident illustre les risques de la chaîne d'approvisionnement logicielle et des fournisseurs d'infrastructure IA."
+      "section": "finance-et-marches",
+      "text": "Un arrêt national des vols ordonné par la FAA a paralysé le trafic américain pendant plusieurs heures, avec des retards et annulations au Canada. La cause profonde reste inconnue; le retour à la normale est prévu lundi."
     },
     {
       "article_ids": [
@@ -2560,28 +2565,36 @@
         "2954df36f35d"
       ],
       "section": "finance-et-marches",
-      "text": "L'introduction en bourse d'Anthropic et les turbulences chez Nvidia font de cette semaine un moment charnière pour l'IA en bourse. Le secteur cherche un signe positif dans un climat difficile."
+      "text": "L'introduction en bourse d'Anthropic arrive alors que le secteur de l'IA cherche un signe positif. Avec Nvidia, elle fait de cette semaine un moment charnière pour l'IA en bourse."
     },
     {
       "article_ids": [
-        "97a8f83dfde3",
-        "906b381d1ad6"
+        "205541d416be",
+        "960f41318ea9",
+        "29c8bcf132e2"
       ],
-      "section": "quebec-canada",
-      "text": "Quatre pays dont le Canada exigent un accès humanitaire « sans entrave » à Gaza, où 150 000 tentes et fournitures sont bloquées à la frontière. De fortes pluies ont inondé des dizaines de milliers de tentes."
+      "section": "technologie-et-infrastructure-ti",
+      "text": "Cursor confirme qu'une clé volée chez Fireworks AI a permis de distribuer une extension Claude Code malveillante. Le FBI avertit aussi que l'outil ARTEX, propulsé par l'IA, automatise des cyberattaques mondiales."
     },
     {
       "article_ids": [
         "6f6210872137",
-        "6eea1f859136",
-        "1ec299e8ca4a"
+        "6eea1f859136"
       ],
       "section": "quebec-canada",
-      "text": "Mark Carney et Paul St-Pierre Plamondon ont tenu leur première rencontre au Cambodge, en marge du Sommet de la Francophonie. Ils ont discuté de commerce avec les États-Unis et d'itinérance, et la rencontre s'est bien passée."
+      "text": "Mark Carney et Paul St-Pierre Plamondon se sont rencontrés pour la première fois au Cambodge, en marge du Sommet de la Francophonie. Ils ont discuté de commerce avec les États-Unis et d'itinérance; le chef péquiste s'en dit enchanté."
+    },
+    {
+      "article_ids": [
+        "18fd59a44f5d",
+        "05e460bcfa7f"
+      ],
+      "section": "quebec-canada",
+      "text": "Un cinquième militaire est décédé des suites de l'incendie à la base de Wainwright, en Alberta. Selon les Forces armées canadiennes, 24 soldats demeurent hospitalisés."
     }
   ],
   "failed_sources": [],
-  "generated_at": "2026-11-16T02:00:47.166062+00:00",
+  "generated_at": "2026-11-16T02:02:42.225258+00:00",
   "markets": [
     {
       "as_of": "2026-11-13",
