@@ -2280,18 +2280,34 @@
       "summary": "Un tronçon de l'autoroute 995 relie la Première Nation de Hatchet Lake Denesuline à Wollaston Lake, dans le nord de la Saskatchewan. Il a été mis en service après vingt ans de planification et de travaux.",
       "title": "Wollaston Lake célèbre la mise en route de l’autoroute 995",
       "url": "https://ici.radio-canada.ca/videos/1-10810174/wollaston-lake-celebre-mise-en-route-autoroute-995"
+    },
+    {
+      "also_covered_by": [],
+      "excerpt": "Calls for Jensen Huang's return as Nvidia CEO are growing, with tech executives and major shareholders backing a potential comeback following his resignation.",
+      "id": "68541c852c8c",
+      "importance": 3,
+      "published": "2026-11-16T01:50:10+00:00",
+      "section": "finance-et-marches",
+      "source": "CNBC",
+      "summary": "Des dirigeants du secteur technologique et des actionnaires importants réclament de plus en plus le retour de Jensen Huang à la tête de Nvidia. Ces appels surviennent après sa démission du poste de PDG.",
+      "title": "Tech world's calls for Jensen Huang to return to Nvidia are growing",
+      "url": "https://www.cnbc.com/2026/11/16/nvidia-jensen-huang-return-tech.html"
+    },
+    {
+      "also_covered_by": [],
+      "excerpt": "Il purgeait une peine depuis 1989 et avait été transféré depuis sa prison deux jours plus tôt pour être soigné en urgence.",
+      "id": "617e7fca6ad4",
+      "importance": 3,
+      "published": "2026-11-16T01:43:23+00:00",
+      "section": "quebec-canada",
+      "source": "Le Devoir",
+      "summary": "Le baron de la drogue mexicain Miguel Ángel Félix Gallardo est mort. Il purgeait une peine de prison depuis 1989 et avait été transféré deux jours plus tôt pour recevoir des soins d'urgence.",
+      "title": "Mort du puissant baron de la drogue mexicain Miguel Ángel Félix Gallardo",
+      "url": "https://www.ledevoir.com/monde/ameriques/1025213/mort-puissant-baron-drogue-mexicain-miguel-angel-felix-gallardo"
     }
   ],
   "day": "2026-11-15",
   "digest": [
-    {
-      "article_ids": [
-        "109e7c320ce6",
-        "23c59306d77a"
-      ],
-      "section": "quebec-canada",
-      "text": "Washington aurait proposé à l'Ukraine une adhésion à l'OTAN en échange de concessions territoriales, selon Zelensky, qui ajoute que Moscou a rejeté une trêve énergétique lors des discussions à Abou Dhabi. C'est l'élément géopolitique le plus lourd de la journée."
-    },
     {
       "article_ids": [
         "537a82ef6ee9",
@@ -2300,16 +2316,16 @@
         "ac2a2d7d52b3",
         "77bcc181511e",
         "770de7745f3f",
+        "68541c852c8c",
         "88d121753224",
-        "0ae485d0fe26",
         "024802442c5a",
         "7530eb5b8986",
+        "0ae485d0fe26",
         "d88110ec6afa",
-        "6fdb9cf64c8f",
-        "19671ae909ee"
+        "2954df36f35d"
       ],
-      "section": "intelligence-artificielle",
-      "text": "Le secrétaire au Trésor Scott Bessent veut savoir si Nvidia a fermé les yeux sur la contrebande de puces d'IA vers la Chine et réclame un « remaniement spectaculaire » avec un PDG venu de l'extérieur. Après la démission de Jensen Huang, deux grands investisseurs demandent pourtant au conseil d'envisager son retour, tandis que le Congrès veut resserrer les règles d'exportation et que Megaspeed est aussi visée par un examen américain."
+      "section": "finance-et-marches",
+      "text": "Nvidia traverse une crise de direction : Jensen Huang a démissionné après la révélation de liaisons, dont une avec une femme chinoise soupçonnée d'espionnage. Le secrétaire au Trésor Scott Bessent réclame un PDG venu de l'extérieur, la Maison-Blanche cherche à savoir si Nvidia a fermé les yeux sur la contrebande de puces vers la Chine, le Congrès veut resserrer les règles d'exportation, et des investisseurs ainsi que des acteurs du secteur militent pour le retour de Huang."
     },
     {
       "article_ids": [
@@ -2326,17 +2342,26 @@
         "c13c1607915e"
       ],
       "section": "technologie-et-infrastructure-ti",
-      "text": "Un arrêt au sol national imposé par la FAA a paralysé le transport aérien aux États-Unis, avec des annulations à Vancouver, Montréal et Ottawa. La cause profonde reste inconnue (routeurs et vieux système de communication évoqués), Trump réclame plus de fonds au Congrès et le retour à la normale est attendu lundi."
+      "text": "Un arrêt national des vols aux États-Unis, ordonné par la FAA, a causé des annulations et retards jusqu'au Canada (Vancouver, Montréal, Ottawa). La cause profonde reste inconnue : des routeurs et un ancien système de communication sont évoqués, Trump réclame plus de fonds pour la FAA, et le retour à la normale est attendu lundi."
+    },
+    {
+      "article_ids": [
+        "109e7c320ce6",
+        "23c59306d77a"
+      ],
+      "section": "quebec-canada",
+      "text": "Selon Zelensky, Washington a proposé à l'Ukraine une adhésion à l'OTAN en échange de concessions territoriales, et Moscou a rejeté une trêve énergétique lors des discussions à Abou Dhabi. Cela pourrait peser lourd sur l'issue de la guerre."
     },
     {
       "article_ids": [
         "205541d416be",
         "960f41318ea9",
+        "d1f88f4d5d8d",
         "29c8bcf132e2",
-        "d1f88f4d5d8d"
+        "184f2939a864"
       ],
       "section": "technologie-et-infrastructure-ti",
-      "text": "Cursor confirme qu'une clé d'accès volée à son fournisseur Fireworks AI a permis de distribuer une extension Claude Code piégée sur sa place de marché. Le FBI avertit aussi que l'outil ARTEX, propulsé par l'IA, sert à automatiser des cyberattaques, et TSMC confirme une fuite de données d'employés liée à un fournisseur infonuagique."
+      "text": "Plusieurs incidents de sécurité touchent la chaîne d'approvisionnement TI et infonuagique : Cursor attribue la compromission d'une extension Claude Code à une clé volée chez Fireworks AI, TSMC confirme une fuite de données d'employés liée à un fournisseur infonuagique, et le FBI avertit que l'outil ARTEX alimenté par l'IA sert à automatiser des cyberattaques. Les États-Unis ont aussi perturbé une campagne nord-coréenne liée à un vol de plus de 400 M$ en cryptomonnaies."
     },
     {
       "article_ids": [
@@ -2344,7 +2369,7 @@
         "2954df36f35d"
       ],
       "section": "finance-et-marches",
-      "text": "L'introduction en bourse d'Anthropic arrive alors que le secteur de l'IA est sous pression et cherche un signe positif. Nvidia et Anthropic dominent la semaine à venir en bourse."
+      "text": "L'introduction en bourse d'Anthropic arrive dans un secteur de l'IA fragilisé et est présentée comme un signe positif attendu. Elle est, avec Nvidia, au cœur d'une semaine charnière pour la thématique de l'IA en bourse."
     },
     {
       "article_ids": [
@@ -2353,21 +2378,20 @@
         "21cf2dac2d4f"
       ],
       "section": "finance-et-marches",
-      "text": "Les centres de données pour l'IA suscitent des frictions au Canada : Telus a renoncé à deux projets à Vancouver faute de soutien local, et leur consommation imprévisible complique la gestion du réseau électrique albertain."
+      "text": "Les centres de données pour l'IA suscitent des frictions : Telus a renoncé à deux projets à Vancouver faute d'appui local, et leur consommation imprévisible complique la gestion du réseau électrique albertain. Le pari de Danielle Smith sur ce secteur est jugé risqué."
     },
     {
       "article_ids": [
-        "6f6210872137",
-        "1ec299e8ca4a",
-        "791d1bad0e24",
-        "6eea1f859136"
+        "cacd64f84fae",
+        "18fd59a44f5d",
+        "05e460bcfa7f"
       ],
       "section": "quebec-canada",
-      "text": "Carney et le premier ministre du Québec, Paul St-Pierre Plamondon, ont tenu leur première rencontre au Cambodge, en marge du Sommet de la Francophonie, et ont discuté de commerce avec les États-Unis et d'itinérance. Le ton a été cordial, et le Québec obtient un appui fédéral contre l'itinérance."
+      "text": "Un cinquième militaire est décédé des suites de l'incendie de la base de Wainwright, en Alberta, et 24 soldats demeurent hospitalisés selon les Forces armées canadiennes."
     }
   ],
   "failed_sources": [],
-  "generated_at": "2026-11-16T01:44:33.952975+00:00",
+  "generated_at": "2026-11-16T01:54:31.817998+00:00",
   "markets": [
     {
       "as_of": "2026-11-13",
