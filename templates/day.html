@@ -42,8 +42,9 @@
 
 {% if view.quotes %}
     <section class="marches" aria-label="Chiffres de marché">
+{% for row in view.quote_rows %}
       <ul>
-{% for q in view.quotes %}
+{% for q in row %}
         <li class="{{ q.direction }}">
           <span class="nom">{{ q.name }}</span>
           <span class="valeur">{{ q.value }}</span>
@@ -56,6 +57,7 @@
         </li>
 {% endfor %}
       </ul>
+{% endfor %}
 {% if view.close %}
       <p class="cloture">Clôture du {{ view.close }}</p>
 {% endif %}

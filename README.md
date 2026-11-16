@@ -51,7 +51,8 @@ dans le code ni dans le dépôt.**
 |---|---|---|---|
 | `ANTHROPIC_API_KEY` | résumés | <https://platform.claude.com/> | à l'usage (voir plus bas) |
 | `FRED_API_KEY` | S&P 500, Nasdaq, taux de la Fed | <https://fred.stlouisfed.org/docs/api/api_key.html> | gratuit |
-| `TWELVEDATA_API_KEY` | actions canadiennes (FNB EWC) | <https://twelvedata.com/> | gratuit |
+| `TWELVEDATA_API_KEY` | actions canadiennes (FNB EWC), Bitcoin | <https://twelvedata.com/> | gratuit |
+| `ALPHAVANTAGE_API_KEY` | FNB cotés à Toronto (XEQT) | <https://www.alphavantage.co/support/#api-key> | gratuit, 25 requêtes par jour |
 
 Aucune clé n'est obligatoire. Sans `ANTHROPIC_API_KEY`, les articles affichent l'extrait
 de la source au lieu d'un résumé ; sans clé de marché, la case correspondante affiche « n. d. ».
@@ -115,7 +116,7 @@ Autres réglages : `general.fenetre_heures` (âge maximal des nouvelles, 36 h),
    git push -u origin main
    ```
 2. Dans *Settings → Secrets and variables → Actions*, ajouter les secrets
-   `ANTHROPIC_API_KEY`, `FRED_API_KEY` et `TWELVEDATA_API_KEY`.
+   `ANTHROPIC_API_KEY`, `FRED_API_KEY`, `TWELVEDATA_API_KEY` et `ALPHAVANTAGE_API_KEY`.
 3. Dans *Settings → Pages*, choisir la source **GitHub Actions**.
 4. Dans l'onglet *Actions*, ouvrir « Veille quotidienne » et cliquer **Run workflow** pour
    produire la première édition.

@@ -314,3 +314,19 @@ def test_digest_point_without_any_image_has_no_img(tmp_path):
 def test_static_files_carry_a_fingerprint_against_stale_caches(site):
     assert re.search(r'href="static/style\.css\?v=[0-9a-f]{8}"', html_of(site / "index.html"))
     assert re.search(r'href="\.\./static/style\.css\?v=[0-9a-f]{8}"', html_of(site / "jour" / "2026-11-13.html"))
+
+
+# --- Bandeau sur deux lignes, Bitcoin ---
+
+def test_markets_are_shown_on_two_rows_and_crypto_does_not_set_the_close(tmp_path):
+    q2 = MarketQuote(name="XEQT", kind="indice", value=40.0, value_low=None, change_pct=2.04, as_of=date(2026, 11, 12), row=2)
+    btc = MarketQuote(name="Bitcoin", kind="crypto", value=65351.05, value_low=None, change_pct=-1.26, as_of=date(2026, 11, 15), row=2)
+    save_day(DayData(day=date(2026, 11, 15), generated_at=GENERATED, articles=[art("m1", "ia", "Titre")], digest=None, failed_sources=[],
+                     markets=[quote("S&P 500", "indice", 6012.0, -0.2), q2, btc]), tmp_path / "data")
+    build_site(tmp_path / "data", tmp_path / "site", CONFIG, search=False)
+    page = (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
+    rows = re.findall(r"<ul[^>]*>(.*?)</ul>", re.search(r'<section class="marches".*?</section>', page, flags=re.S).group(0), flags=re.S)
+    assert len(rows) == 2 and "S&amp;P 500" in rows[0] and "XEQT" in rows[1] and "Bitcoin" in rows[1]
+    assert "65 351" in unescape(rows[1]) and "65 351,05" not in unescape(rows[1])   # sans décimales
+    assert "Clôture du 12 novembre" in page                 # le Bitcoin, coté 7 jours sur 7, ne fixe pas la clôture
+    assert 'class="date"' not in rows[1]                     # et ne porte pas de date d'écart

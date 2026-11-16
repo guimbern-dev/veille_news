@@ -3,7 +3,8 @@
 Fournisseurs (API officielles et gratuites) :
 - valet      : Banque du Canada, sans clé ;
 - fred       : Réserve fédérale de Saint-Louis, clé gratuite FRED_API_KEY ;
-- twelvedata : Twelve Data, clé gratuite TWELVEDATA_API_KEY (utilisé pour le FNB d'actions canadiennes EWC).
+- twelvedata : Twelve Data, clé gratuite TWELVEDATA_API_KEY (FNB cotés aux États-Unis, Bitcoin).
+- alphavantage : Alpha Vantage, clé gratuite ALPHAVANTAGE_API_KEY (FNB cotés à Toronto, suffixe .TRT).
 
 Un symbole indisponible donne une cote vide, affichée « n. d. » : il ne bloque
 jamais la page.
@@ -66,13 +67,24 @@ def _twelvedata(symbol: str, fetch: Fetch, key: str | None) -> list[Observation]
     return [(date.fromisoformat(r["datetime"][:10]), _number(r["close"])) for r in payload["values"]]
 
 
+def _alphavantage(symbol: str, fetch: Fetch, key: str | None) -> list[Observation]:
+    url = ("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY"
+           f"&symbol={quote(symbol)}&outputsize=compact&apikey={quote(key or '')}")
+    payload = json.loads(fetch(url))
+    if "Time Series (Daily)" not in payload:   # limite atteinte ou symbole refusé : l'API répond par une note
+        raise ValueError("réponse sans série quotidienne")
+    return [(date.fromisoformat(day), _number(row.get("4. close")))
+            for day, row in payload["Time Series (Daily)"].items()]
+
+
 # fournisseur -> (fonction de lecture, une clé est-elle obligatoire ?)
-_PROVIDERS = {"valet": (_valet, False), "fred": (_fred, True), "twelvedata": (_twelvedata, True)}
+_PROVIDERS = {"valet": (_valet, False), "fred": (_fred, True), "twelvedata": (_twelvedata, True),
+              "alphavantage": (_alphavantage, True)}
 
 
 def _quote(market: MarketSymbol, fetch: Fetch, keys: dict[str, str | None]) -> MarketQuote:
     empty = MarketQuote(name=market.name, kind=market.kind, value=None, value_low=None,
-                        change_pct=None, as_of=None)
+                        change_pct=None, as_of=None, row=market.row)
     if market.provider not in _PROVIDERS:
         log.warning("Marché « %s » : fournisseur « %s » non pris en charge", market.name, market.provider)
         return empty
@@ -95,7 +107,8 @@ def _quote(market: MarketSymbol, fetch: Fetch, keys: dict[str, str | None]) -> M
             low_pair = last_two(read(market.symbol_low, fetch, key))
             low = low_pair[0][1] if low_pair else None
         return MarketQuote(name=market.name, kind=market.kind, value=value, value_low=low,
-                           change_pct=round(change, 4) if change is not None else None, as_of=as_of)
+                           change_pct=round(change, 4) if change is not None else None, as_of=as_of,
+                           row=market.row)
     except Exception as exc:
         # On ne journalise que le type d'erreur : son message peut contenir l'URL, donc la clé.
         log.warning("Marché « %s » indisponible (%s)", market.name, type(exc).__name__)

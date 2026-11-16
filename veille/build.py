@@ -76,7 +76,7 @@ def format_quote(quote: MarketQuote) -> dict:
         if quote.value_low is not None:  # fourchette cible de la Fed
             value = f"{french_number(quote.value_low)}-{value}"
     else:
-        value = french_number(quote.value, 4 if quote.kind == "devise" else 2)
+        value = french_number(quote.value, {"devise": 4, "crypto": 0}.get(quote.kind, 2))
 
     change, direction = "", "stable"
     if quote.change_pct is not None:
@@ -143,12 +143,14 @@ def day_view(data: DayData, config: Config) -> dict:
     for q in data.markets:
         view = format_quote(q)
         # Une cote plus ancienne que la clôture annoncée (jour férié d'une seule bourse) porte sa date.
-        stale = q.kind != "taux" and q.as_of is not None and q.as_of != close
+        stale = q.kind in ("indice", "devise") and q.as_of is not None and q.as_of != close
         view["date"] = f"{q.as_of.day} {SHORT_MONTHS[q.as_of.month - 1]}" if stale else ""
+        view["row"] = q.row
         quotes.append(view)
     return {
         "day": data.day, "title": french_date(data.day), "sections": sections, "digest": digest,
         "quotes": quotes,
+        "quote_rows": [r for r in ([q for q in quotes if q["row"] == n] for n in (1, 2)) if r],
         "close": french_date(close, weekday=False).rsplit(" ", 1)[0] if close else "",
         "count": len(shown_ids), "failed": len(data.failed_sources),
         "generated": data.generated_at,

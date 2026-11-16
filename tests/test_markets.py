@@ -128,3 +128,34 @@ def test_failure_log_never_contains_the_api_key(caplog):
         raise ConnectionError(f"échec pour {url}")
     fetch_quotes((SP500,), leaky, KEYS)
     assert "cle-fred" not in caplog.text and "S&P 500" in caplog.text
+
+
+# --- Deuxième ligne, Bitcoin et fournisseur Alpha Vantage ---
+
+def alphavantage(*rows: tuple[str, str]) -> bytes:
+    return json.dumps({"Meta Data": {}, "Time Series (Daily)": {day: {"4. close": close} for day, close in rows}}).encode()
+
+
+def test_row_is_carried_from_the_symbol_to_the_quote():
+    btc = MarketSymbol(name="Bitcoin", provider="twelvedata", symbol="GSPTSE", kind="crypto", row=2)
+    q = fetch_quotes((SP500, btc), fixture_fetch, KEYS)
+    assert (q[0].row, q[1].row, q[1].kind) == (1, 2, "crypto")
+
+
+def test_alphavantage_daily_series():
+    xeqt = MarketSymbol(name="XEQT", provider="alphavantage", symbol="XEQT.TRT", kind="indice", row=2)
+    urls = []
+    def fetch(url):
+        urls.append(url)
+        return alphavantage(("2026-11-13", "40.00"), ("2026-11-12", "39.20"), ("2026-11-11", "39.00"))
+    q = fetch_quotes((xeqt,), fetch, {"alphavantage": "cle-av"})[0]
+    assert (q.value, q.as_of, q.row) == (40.0, d(13), 2) and abs(q.change_pct - 2.0408) < 0.001
+    assert "function=TIME_SERIES_DAILY" in urls[0] and "symbol=XEQT.TRT" in urls[0] and "apikey=cle-av" in urls[0]
+
+
+def test_alphavantage_error_note_or_missing_key_gives_an_empty_quote():
+    xeqt = MarketSymbol(name="XEQT", provider="alphavantage", symbol="XEQT.TRT", kind="indice", row=2)
+    note = json.dumps({"Information": "limite quotidienne atteinte"}).encode()
+    assert fetch_quotes((xeqt,), lambda url: note, {"alphavantage": "cle"})[0].value is None
+    empty = fetch_quotes((xeqt,), lambda url: 1 / 0, {})[0]
+    assert empty.value is None and empty.row == 2      # la case garde sa ligne même sans donnée

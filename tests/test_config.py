@@ -111,3 +111,16 @@ def test_page_images_default_on_and_can_be_turned_off(tmp_path):
     off = tmp_path / "off.yaml"; off.write_text("general: {images_des_pages: false}\n" + base, encoding="utf-8")
     from veille.config import load_config
     assert load_config(on).page_images is True and load_config(off).page_images is False
+
+
+def test_market_row_and_new_kinds_are_read(tmp_path):
+    from veille.config import load_config
+    text = ("modeles: {articles: a, resume_du_jour: b}\n"
+            "marches:\n"
+            "  - {nom: S, fournisseur: fred, symbole: SP500}\n"
+            "  - {nom: XEQT, fournisseur: alphavantage, symbole: XEQT.TRT, ligne: 2}\n"
+            "  - {nom: Bitcoin, fournisseur: twelvedata, symbole: BTC/USD, type: crypto, ligne: 2}\n"
+            "rubriques:\n  - nom: IA\n    sources: [{nom: S, url: \"https://s.test/rss\"}]\n")
+    path = tmp_path / "c.yaml"; path.write_text(text, encoding="utf-8")
+    markets = load_config(path).markets
+    assert [(m.row, m.kind, m.provider) for m in markets] == [(1, "indice", "fred"), (2, "indice", "alphavantage"), (2, "crypto", "twelvedata")]

@@ -158,7 +158,8 @@ def main(argv: list[str] | None = None) -> int:
         log.info("Site généré dans %s", args.out)
         return 0
 
-    keys = {"fred": os.environ.get("FRED_API_KEY"), "twelvedata": os.environ.get("TWELVEDATA_API_KEY")}
+    keys = {"fred": os.environ.get("FRED_API_KEY"), "twelvedata": os.environ.get("TWELVEDATA_API_KEY"),
+            "alphavantage": os.environ.get("ALPHAVANTAGE_API_KEY")}
     client = None if args.sans_resumes else _make_client()
     run_pipeline(config, Path(args.data), Path(args.out), datetime.now(timezone.utc), http_fetch,
                  client, keys, build=args.command == "run", search=search,

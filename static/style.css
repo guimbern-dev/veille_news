@@ -83,7 +83,7 @@ h2 {
 /* Bandeau de marché : défile horizontalement sur petit écran */
 .marches { margin: 0 0 22px; }
 .marches ul {
-  list-style: none; margin: 0; padding: 0 0 6px; display: flex; gap: 10px;
+  list-style: none; margin: 0 0 8px; padding: 0 0 6px; display: flex; gap: 10px;
   overflow-x: auto; scrollbar-width: thin;
 }
 .marches li {

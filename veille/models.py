@@ -31,6 +31,7 @@ class MarketQuote:
     value_low: float | None      # borne basse quand le taux est une fourchette (Fed)
     change_pct: float | None     # variation en % (indice, devise) ou en points (taux)
     as_of: date | None           # date de l'observation
+    row: int = 1                 # ligne du bandeau (1 ou 2)
 
 
 @dataclass

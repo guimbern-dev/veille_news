@@ -13,8 +13,8 @@ from pathlib import Path
 
 import yaml
 
-PROVIDERS = ("valet", "fred", "twelvedata")
-KINDS = ("indice", "taux", "devise")
+PROVIDERS = ("valet", "fred", "twelvedata", "alphavantage")
+KINDS = ("indice", "taux", "devise", "crypto")
 
 
 class ConfigError(ValueError):
@@ -42,6 +42,7 @@ class MarketSymbol:
     symbol: str
     kind: str
     symbol_low: str | None = None
+    row: int = 1   # ligne du bandeau (1 ou 2)
 
 
 @dataclass(frozen=True)
@@ -93,6 +94,7 @@ def _parse_markets(raw: object) -> tuple[MarketSymbol, ...]:
             symbol=str(_require(item, "symbole", where)),
             kind=kind,
             symbol_low=str(item["symbole_bas"]) if item.get("symbole_bas") else None,
+            row=2 if str(item.get("ligne", 1)) == "2" else 1,
         ))
     return tuple(markets)
 
